@@ -8,7 +8,7 @@ Spiritual successor to [Lambo's presets](https://github.com/tighten/lambo/pull/1
 
 One common use case could be for a starter kit creator to automate building new versions of their starter kit; every time Laravel releases a new version, you can build again by running a new Laravel install and then running your Mise steps.
 
-I also wonder whether we could distribute Mise presets as standalone configurations--almost like "here's your starter kit, a Mise config file".
+I also wonder whether we could distribute Mise recipes as standalone configurations--almost like "here's your starter kit, a Mise config file".
 
 ## Vision
 
@@ -21,7 +21,7 @@ laravel new money-maker
 cd money-maker
 ```
 
-Then you can use Mise to apply presets:
+Then you can use Mise to apply recipes:
 
 ```bash
 mise apply preset1 preset2 preset3
@@ -37,23 +37,23 @@ mise apply
 
 I can imagine Mise comes with predefined "steps"; for example, a step named "duster" could do the following:
 
-- `composer rqeuire-dev tightenco/duster`
+- `composer require-dev tightenco/duster`
 - Run `./vendor/bin/duster github-actions`
 - Run `git add . && git commit -m "Install Duster"`
 - Run `./vendor/bin/duster fix`
 - Run `git add . && git commit -m "Run Duster"`
 
-The definition for this step would be built into code in Mise, using some combination of convenience helpers that make common tasks (e.g. "git commit with message", "composer require dev") easy; then presets would include this step.
+The definition for this step would be built into code in Mise, using some combination of convenience helpers that make common tasks (e.g. "git commit with message", "composer require dev") easy; then recipes would include this step.
 
-### How presets/recipes would be defined/loaded
+### How recipes would be defined/loaded
 
-Presets would be defined... that's the hard part. I know some can be defined in Mise. And I know some can be defined locally. But what is a safe way to define presets to be shared?
+Recipes would be defined... that's the hard part. I know some can be defined in Mise. And I know some can be defined locally. But what is a safe way to define recipes to be shared?
 
 - Composer is too heavy, I think, unless one person/group wanted to release a whole pack of steps/recipes
 - Pulling from gists makes it too easy for someone just to update it to something nefarious and then you're running untested bash scripts on your machine
-- Clumsiest but safest is to just have a central site where you can share presets but you have to manually copy to them to your local machine
+- Clumsiest but safest is to just have a central site where you can share recipes but you have to manually copy to them to your local machine
 
-Also maybe some useful thing where you can set a configuration item so if you run `mise default` or something, it'll run a predefined set of presets, so you can say "all my new Laravel apps should have these three presets run" as your default.
+Also maybe some useful thing where you can set a configuration item so if you run `mise default` or something, it'll run a predefined set of recipes, so you can say "all my new Laravel apps should have these three recipes run" as your default.
 
 ### Building a step
 
@@ -81,9 +81,9 @@ I can imagine we'll want tooling to create files, replace content in files, rena
 
 Some of this will come from having a `filesystem` component directly available, and, of course, access to the entire Laravel world through the container. Some it'd be nice to have one-off commands or even little suites of tools (e.g this `git` helper described above) to simplify some of the steps. I'll be looking to Lambo and Valet for at least some inspiration on those.
 
-### Building a recipe/preset
+### Building a recipe
 
-Let's imagine we have a preset for creating a new Tighten SaaS. What steps do we want to take after `laravel new`?
+Let's imagine we have a recipe for creating a new Tighten SaaS. What steps do we want to take after `laravel new`?
 
 We could have it be a simple YML/JSON file... just with a list of steps... or it can be a PHP file so it can have standalone work outside of steps, or pass configuration items to steps?
 
@@ -98,7 +98,7 @@ class Tighten extends Recipe
 }
 ```
 
-I don't know if I want any steps to take user input, but if they can, doing it as a class would help that:
+We can also take user input, which is easier as a PHP class:
 
 ```php
 class Tighten extends Recipe
@@ -114,7 +114,6 @@ class Tighten extends Recipe
     }
 }
 ```
-
 
 ## Reference
 
