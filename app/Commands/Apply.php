@@ -78,12 +78,10 @@ class Apply extends Command
             );
 
             foreach ($selected as $recipe) {
-                warning("Applying recipe: {$recipe} ..");
+                warning("Applying recipe: {$recipe}..");
                 app("App\\Recipes\\{$recipe}")();
 
             }
-
-            return;
         }
     }
 

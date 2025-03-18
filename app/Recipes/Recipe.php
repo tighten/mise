@@ -17,7 +17,7 @@ abstract class Recipe
         $relativeClass = implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::title($part))->toArray());
         $actualClass = "App\\Steps\\{$relativeClass}";
         if (class_exists($actualClass)) {
-            warning("Perform {$relativeClass}..");
+            warning("Run step: {$relativeClass}..");
             app($actualClass)();
         } else {
             error("Unable to perform '{$actualClass}'. Step not found.");
