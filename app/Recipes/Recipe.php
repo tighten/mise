@@ -2,18 +2,33 @@
 
 namespace App\Recipes;
 
+use Illuminate\Support\Str;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\warning;
+
 abstract class Recipe
 {
-    public function step(string $stepName, ...$params)
+    public function step(string $stepName, ...$params): void
     {
         // @todo Convert string step names, build step, and pass params
-        echo "Perform {$stepName}.." . PHP_EOL;
+
+        $relativeClass = implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::title($part))->toArray());
+        $actualClass = "App\\Steps\\{$relativeClass}";
+        if (class_exists($actualClass)) {
+            warning("Perform {$relativeClass}..");
+            app($actualClass)();
+        } else {
+            error("Unable to perform '{$actualClass}'. Step not found.");
+        }
     }
 
-    public function confirm(string $label, bool $default = true)
+    public function confirm(string $label, bool $default = true): bool
     {
-        echo "Conform: {$label}? ";
-        echo $default ? '[Y\n]' : '[y\N]';
-        echo PHP_EOL;
+        return confirm($label, default: $default);
+        // echo "Conform: {$label}? ";
+        // echo $default ? '[Y\n]' : '[y\N]';
+        // echo PHP_EOL;
     }
 }

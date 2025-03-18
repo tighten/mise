@@ -6,7 +6,7 @@ use App\Recipes\Recipe;
 
 class BasicSaas extends Recipe
 {
-    public function __invoke()
+    public function __invoke(): void
     {
         $this->step('duster/install');
         $this->step('duster/ci', someParameterHereOrWhatever: true);
