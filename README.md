@@ -1,5 +1,8 @@
 # Mise ("meez")
 
+> [!WARNING]  
+> This is a blank Laravel Zero repo at the moment. Everything's just in the README as I try to figure out the best API.
+
 A CLI tool to automatically apply preset steps to (likely, but not necessarily, new) Laravel applications.
 
 Using concepts like composable recipes built from individual steps.
