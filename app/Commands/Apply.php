@@ -28,7 +28,7 @@ class Apply extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         if (empty($this->argument('preset'))) {
             $this->info('Available recipes:');
@@ -78,8 +78,8 @@ class Apply extends Command
             );
 
             foreach ($selected as $recipe) {
-                warning("Applying recipe: {$recipe}..");
-                app("App\\Recipes\\{$recipe}")();
+                warning("Applying recipe: $recipe..");
+                app("App\\Recipes\\$recipe")();
 
             }
         }

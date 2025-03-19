@@ -13,9 +13,7 @@ class ConsoleCommand
     public function run(string $command): static
     {
         $cmd = $command;
-
-        info("Run Tool: '{$command}'");
-
+        info("Run Tool: '$command'");
         Process::run($cmd);
 
         return $this;
@@ -23,6 +21,6 @@ class ConsoleCommand
 
     public function vendorRun(string $command): void
     {
-        $this->run("vendor/bin/{$command}");
+        $this->run("vendor/bin/$command");
     }
 }
