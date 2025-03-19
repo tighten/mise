@@ -27,10 +27,9 @@ class Git extends ConsoleCommand
         return $this;
     }
 
-    public function addAndCommit(string $message): static
+    public function addAndCommit(string $message, string $path = '.'): static
     {
-        $this->add('.');
-        $this->run("git commit -m '$message'");
+        $this->run("git add '$path' && git commit -m '$message'");
 
         return $this;
     }
