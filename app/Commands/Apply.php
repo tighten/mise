@@ -2,9 +2,9 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
+use ReflectionClass;
 
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\warning;
@@ -30,45 +30,35 @@ class Apply extends Command
      */
     public function handle(): void
     {
+
         if (empty($this->argument('preset'))) {
-            $this->info('Available recipes:');
-
             $recipesPath = app_path('Recipes');
-
-            $files = File::allFiles($recipesPath);
-
-            $recipes = collect($files)
+            $recipes = collect(File::allFiles($recipesPath))
                 ->filter(function ($file) {
-                    // Include only PHP files
-                    if ($file->getExtension() !== 'php') {
-                        return false;
-                    }
-
-                    // Exclude abstract classes
-                    $content = file_get_contents($file->getPathname());
-                    if (preg_match('/abstract\s+class/i', $content)) {
-                        return false;
-                    }
-
-                    return true;
+                    return $file->getExtension() === 'php';
                 })
                 ->map(function ($file) use ($recipesPath) {
-                    // Get the relative path from the recipes directory
-                    $relativePath = File::dirname(
-                        str_replace($recipesPath.'/', '', $file->getPathname())
-                    );
+                    // Convert file path to namespace format
+                    $relativePath = str_replace([$recipesPath.'/', '.php'], '', $file->getPathname());
+                    $className = 'App\\Recipes\\'.str_replace('/', '\\', $relativePath);
 
-                    // Get filename without extension
-                    $filename = $file->getFilenameWithoutExtension();
+                    if (class_exists($className)) {
+                        $reflection = new ReflectionClass($className);
 
-                    // If it's in the root recipes directory, just return the filename
-                    if ($relativePath === '.') {
-                        return $filename;
+                        if ($reflection->isAbstract()) {
+                            return false;
+                        }
+
+                        if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
+                            return false;
+                        }
+
+                        return $className;
                     }
 
-                    // Otherwise return parent directory with filename
-                    return sprintf('%s\\%s', $relativePath, $filename);
+                    return false;
                 })
+                ->filter()
                 ->sort()
                 ->values();
 
@@ -78,18 +68,10 @@ class Apply extends Command
             );
 
             foreach ($selected as $recipe) {
-                warning("Applying recipe: $recipe..");
-                app("App\\Recipes\\$recipe")();
+                warning("Applying recipe: {$recipe}..");
+                app($recipe)();
 
             }
         }
-    }
-
-    /**
-     * Define the command's schedule.
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }
