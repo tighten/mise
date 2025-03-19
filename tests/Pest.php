@@ -11,7 +11,11 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+use Illuminate\Support\Facades\Process;
+
+uses(Tests\TestCase::class)->beforeEach(function () {
+    Process::preventStrayProcesses();
+})->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
