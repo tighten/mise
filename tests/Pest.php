@@ -43,7 +43,97 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something(): void
-{
-    // ..
-}
+pest()->presets()->custom('zero', function (array $userNamespaces) {
+    return [
+        expect($userNamespaces)->toBeArray(),
+        expect('App\Traits')->toBeTraits(),
+
+        expect('App\Concerns')
+            ->toBeTraits(),
+
+        expect('App')
+            ->not->toBeEnums()
+            ->ignoring('App\Enums'),
+
+        expect('App\Enums')
+            ->toBeEnums()
+            ->ignoring('App\Enums\Concerns'),
+
+        expect('App\Features')
+            ->toBeClasses()
+            ->ignoring('App\Features\Concerns'),
+
+        expect('App\Features')
+            ->toHaveMethod('resolve'),
+
+        expect('App\Exceptions')
+            ->classes()
+            ->toImplement('Throwable')
+            ->ignoring('App\Exceptions\Handler'),
+
+        expect('App')
+            ->not->toImplement(Throwable::class)
+            ->ignoring('App\Exceptions'),
+
+        /*expect('App\Models')
+            ->classes()
+            ->toExtend('Illuminate\Database\Eloquent\Model')
+            ->ignoring('App\Models\Scopes'),
+
+        expect('App\Models')
+            ->classes()
+            ->not->toHaveSuffix('Model'),
+
+        expect('App')
+            ->not->toExtend('Illuminate\Database\Eloquent\Model')
+            ->ignoring('App\Models'),*/
+
+        expect('App\Commands')
+            ->classes()
+            ->toHaveSuffix('Command'),
+
+        expect('App\Commands')
+            ->classes()
+            ->toExtend('Illuminate\Console\Command'),
+
+        expect('App\Commands')
+            ->classes()
+            ->toHaveMethod('handle'),
+
+        expect('App')
+            ->not->toExtend('Illuminate\Console\Command')
+            ->ignoring('App\Commands'),
+
+        expect('App\Listeners')
+            ->toHaveMethod('handle'),
+
+        expect('App\Notifications')
+            ->toExtend('Illuminate\Notifications\Notification'),
+
+        expect('App\Providers')
+            ->toHaveSuffix('ServiceProvider'),
+
+        expect('App\Providers')
+            ->toExtend('Illuminate\Support\ServiceProvider'),
+
+        expect('App\Providers')
+            ->not->toBeUsed(),
+
+        expect('App')
+            ->not->toExtend('Illuminate\Support\ServiceProvider')
+            ->ignoring('App\Providers'),
+
+        expect('App')
+            ->not->toHaveSuffix('ServiceProvider')
+            ->ignoring('App\Providers'),
+
+        expect([
+            'dd',
+            'ddd',
+            'dump',
+            'env',
+            'exit',
+            'ray',
+        ])->not->toBeUsed(),
+    ];
+});

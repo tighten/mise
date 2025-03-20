@@ -9,7 +9,7 @@ use ReflectionClass;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\warning;
 
-class Apply extends Command
+class ApplyCommand extends Command
 {
     /**
      * The name and signature of the console command.
