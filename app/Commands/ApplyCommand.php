@@ -39,8 +39,8 @@ class ApplyCommand extends Command
                 })
                 ->map(function ($file) use ($recipesPath) {
                     // Convert file path to namespace format
-                    $relativePath = str_replace([$recipesPath.'/', '.php'], '', $file->getPathname());
-                    $className = 'App\\Recipes\\'.str_replace('/', '\\', $relativePath);
+                    $relativePath = str_replace([$recipesPath . '/', '.php'], '', $file->getPathname());
+                    $className = 'App\\Recipes\\' . str_replace('/', '\\', $relativePath);
 
                     if (class_exists($className)) {
                         $reflection = new ReflectionClass($className);

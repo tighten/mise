@@ -8,7 +8,7 @@ class Git extends ConsoleCommand
 {
     public function add(string $path): static
     {
-        $this->run("git add $path");
+        $this->run("git add {$path}");
 
         return $this;
     }
@@ -22,14 +22,14 @@ class Git extends ConsoleCommand
 
     public function commit(string $message): static
     {
-        $this->run("git commit -m '$message'");
+        $this->run("git commit -m '{$message}'");
 
         return $this;
     }
 
     public function addAndCommit(string $message, string $path = '.'): static
     {
-        $this->run("git add '$path' && git commit -m '$message'");
+        $this->run("git add '{$path}' && git commit -m '{$message}'");
 
         return $this;
     }
