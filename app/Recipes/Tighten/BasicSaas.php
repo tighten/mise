@@ -15,4 +15,14 @@ class BasicSaas extends Recipe
             $this->step('tighten/prettier');
         }
     }
+
+    public function name(): string
+    {
+        return 'Basic Saas';
+    }
+
+    public function vendor(): string
+    {
+        return 'Tighten Co.';
+    }
 }

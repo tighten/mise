@@ -28,4 +28,8 @@ abstract class Recipe
     {
         return confirm($label, default: $default);
     }
+
+    abstract public function name(): string;
+
+    abstract public function vendor(): string;
 }

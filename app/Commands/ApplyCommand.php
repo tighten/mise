@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-use Illuminate\Support\Facades\File;
+use App\Recipes\Recipe;
 use LaravelZero\Framework\Commands\Command;
 use ReflectionClass;
 
@@ -32,46 +32,45 @@ class ApplyCommand extends Command
     {
 
         if (empty($this->argument('preset'))) {
-            $recipesPath = app_path('Recipes');
-            $recipes = collect(File::allFiles($recipesPath))
-                ->filter(function ($file) {
-                    return $file->getExtension() === 'php';
-                })
-                ->map(function ($file) use ($recipesPath) {
-                    // Convert file path to namespace format
-                    $relativePath = str_replace([$recipesPath . '/', '.php'], '', $file->getPathname());
-                    $className = 'App\\Recipes\\' . str_replace('/', '\\', $relativePath);
-
-                    if (class_exists($className)) {
-                        $reflection = new ReflectionClass($className);
-
-                        if ($reflection->isAbstract()) {
-                            return false;
-                        }
-
-                        if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
-                            return false;
-                        }
-
-                        return $className;
-                    }
-
-                    return false;
-                })
-                ->filter()
-                ->sort()
-                ->values();
-
             $selected = multiselect(
                 label: 'Which recipe(s) should I apply?',
-                options: $recipes
+                options: $this->recipes(),
             );
 
             foreach ($selected as $recipe) {
-                warning("Applying recipe: {$recipe}..");
-                app($recipe)();
-
+                /** @var Recipe $instance */
+                $instance = app($recipe);
+                warning("Applying recipe: {$this->description($instance)}..");
+                ($instance)();
             }
         }
+    }
+
+    private function recipes(): array
+    {
+        return collect(config('mise.recipes'))
+            ->map(function (string $recipe) {
+                if (class_exists($recipe)) {
+                    $reflection = new ReflectionClass($recipe);
+
+                    if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
+                        return false;
+                    }
+
+                    /** @var Recipe $instance */
+                    $instance = $reflection->newInstanceWithoutConstructor();
+
+                    return [$recipe => $this->description($instance)];
+                }
+
+                return false;
+            })
+            ->filter()
+            ->flatMap(fn ($recipe) => $recipe)->toArray();
+    }
+
+    private function description(Recipe $instance): string
+    {
+        return "{$instance->name()} by {$instance->vendor()}";
     }
 }
