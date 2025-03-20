@@ -2,6 +2,7 @@
 
 namespace App\Steps;
 
+use App\Tools\Artisan;
 use App\Tools\Composer;
 use App\Tools\ConsoleCommand;
 use App\Tools\Git;
@@ -12,6 +13,7 @@ abstract class Step
 {
     // @todo load composer, git, etc.
     public function __construct(
+        protected Artisan $artisan,
         protected Composer $composer,
         protected Git $git,
         protected ConsoleCommand $console,
