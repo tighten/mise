@@ -19,3 +19,13 @@ test('composer->requireDev(...)', function () {
 
     Process::assertRan('composer require tightenco/duster --dev');
 });
+
+test('composer->require(...)', function () {
+    Process::fake();
+
+    $composer = new Composer;
+
+    $composer->require('tightenco/duster');
+
+    Process::assertRan('composer require tightenco/duster');
+});

@@ -6,8 +6,13 @@ namespace App\Tools;
 
 class Composer extends ConsoleCommand
 {
-    public function requireDev(string $string): void
+    public function requireDev(string $package): void
     {
-        $this->run("composer require {$string} --dev");
+        $this->run("composer require {$package} --dev");
+    }
+
+    public function require(string $package): void
+    {
+        $this->run("composer require {$package}");
     }
 }
