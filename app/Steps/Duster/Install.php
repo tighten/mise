@@ -14,7 +14,12 @@ class Install extends Step
         // or $this->git->addAndCommit('Install Duster'), not sure
 
         $this->exec('./vendor/bin/duster fix');
-        $this->git->addAll()->commit('Run Duster');
+        $this->git->add('.')->commit('Run Duster');
 
+    }
+
+    public function name(): string
+    {
+        return 'Install Duster';
     }
 }

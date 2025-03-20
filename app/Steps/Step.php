@@ -24,4 +24,6 @@ abstract class Step
         warning("DO {$exec}...");
         $this->console->run($exec);
     }
+
+    abstract public function name(): string;
 }
