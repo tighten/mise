@@ -52,15 +52,11 @@ class ApplyCommand extends Command
             ->map(function (string $recipe) {
                 if (class_exists($recipe)) {
                     $reflection = new ReflectionClass($recipe);
-
                     if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
                         return false;
                     }
 
-                    /** @var Recipe $instance */
-                    $instance = $reflection->newInstanceWithoutConstructor();
-
-                    return [$recipe => $this->description($instance)];
+                    return [$recipe => $this->description($reflection->newInstanceWithoutConstructor())];
                 }
 
                 return false;
