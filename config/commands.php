@@ -39,9 +39,13 @@ return [
     |
     */
 
-    'add' => [
-        //
-    ],
+    'add' => array_merge([
+        // Commands added in both local development and production go here.
+    ], Phar::running() ? [] : [
+        // Commands only included while in local development go here.
+        App\DevelopmentCommands\DusterFixCommand::class,
+        App\DevelopmentCommands\DusterLintCommand::class,
+    ]),
 
     /*
     |--------------------------------------------------------------------------

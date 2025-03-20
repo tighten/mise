@@ -75,34 +75,21 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
             ->not->toImplement(Throwable::class)
             ->ignoring('App\Exceptions'),
 
-        /*expect('App\Models')
-            ->classes()
-            ->toExtend('Illuminate\Database\Eloquent\Model')
-            ->ignoring('App\Models\Scopes'),
-
-        expect('App\Models')
-            ->classes()
-            ->not->toHaveSuffix('Model'),
-
-        expect('App')
-            ->not->toExtend('Illuminate\Database\Eloquent\Model')
-            ->ignoring('App\Models'),*/
-
         expect('App\Commands')
             ->classes()
             ->toHaveSuffix('Command'),
 
-        expect('App\Commands')
+        expect(['App\Commands', 'App\DevelopmentCommands'])
             ->classes()
             ->toExtend('Illuminate\Console\Command'),
 
-        expect('App\Commands')
+        expect(['App\Commands', 'App\DevelopmentCommands'])
             ->classes()
             ->toHaveMethod('handle'),
 
         expect('App')
             ->not->toExtend('Illuminate\Console\Command')
-            ->ignoring('App\Commands'),
+            ->ignoring(['App\Commands', 'App\DevelopmentCommands']),
 
         expect('App\Listeners')
             ->toHaveMethod('handle'),
