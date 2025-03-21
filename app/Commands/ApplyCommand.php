@@ -3,9 +3,11 @@
 namespace App\Commands;
 
 use App\Recipes\Recipe;
+use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
 use ReflectionClass;
 
+use function Laravel\Prompts\info;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\warning;
 
@@ -16,7 +18,9 @@ class ApplyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'apply {preset?*}';
+    protected $signature =
+        'apply {preset?*}'.
+        '{--no-process : prevent processes from executing}';
 
     /**
      * The console command description.
@@ -30,6 +34,10 @@ class ApplyCommand extends Command
      */
     public function handle(): void
     {
+        if ($this->option('no-process')) {
+            info('Dry run enabled');
+            Process::fake();
+        }
 
         if (empty($this->argument('preset'))) {
             $selected = multiselect(
