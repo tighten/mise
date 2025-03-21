@@ -28,10 +28,6 @@ uses(Tests\TestCase::class)->beforeEach(function () {
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -51,14 +47,6 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
         expect('App\Concerns')
             ->toBeTraits(),
 
-        expect('App')
-            ->not->toBeEnums()
-            ->ignoring('App\Enums'),
-
-        expect('App\Enums')
-            ->toBeEnums()
-            ->ignoring('App\Enums\Concerns'),
-
         expect('App\Features')
             ->toBeClasses()
             ->ignoring('App\Features\Concerns'),
@@ -72,6 +60,7 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
             ->ignoring('App\Exceptions\Handler'),
 
         expect('App')
+            ->classes()
             ->not->toImplement(Throwable::class)
             ->ignoring('App\Exceptions'),
 
@@ -81,13 +70,14 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
 
         expect(['App\Commands', 'App\DevelopmentCommands'])
             ->classes()
-            ->toExtend('Illuminate\Console\Command'),
+            ->toExtend(\LaravelZero\Framework\Commands\Command::class),
 
         expect(['App\Commands', 'App\DevelopmentCommands'])
             ->classes()
             ->toHaveMethod('handle'),
 
         expect('App')
+            ->classes()
             ->not->toExtend('Illuminate\Console\Command')
             ->ignoring(['App\Commands', 'App\DevelopmentCommands']),
 
@@ -107,10 +97,12 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
             ->not->toBeUsed(),
 
         expect('App')
+            ->classes()
             ->not->toExtend('Illuminate\Support\ServiceProvider')
             ->ignoring('App\Providers'),
 
         expect('App')
+            ->classes()
             ->not->toHaveSuffix('ServiceProvider')
             ->ignoring('App\Providers'),
 

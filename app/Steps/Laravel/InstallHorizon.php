@@ -18,6 +18,6 @@ class InstallHorizon extends Step
 
     public function name(): string
     {
-        return 'Installing Laravel Horizon';
+        return 'Laravel Horizon';
     }
 }

@@ -23,6 +23,8 @@
     ],
     "require": {
         "php": "^8.2.0",
+        "illuminate/log": "^11.5",
+        "illuminate/queue": "^v11.44.2",
         "laravel-zero/framework": "^11.36.1"
     },
     "require-dev": {
@@ -37,7 +39,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Prompts/prompts.php"
+        ]
+
     },
     "autoload-dev": {
         "psr-4": {

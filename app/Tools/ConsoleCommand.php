@@ -13,7 +13,7 @@ class ConsoleCommand
     public function run(string $command): static
     {
         $cmd = $command;
-        info("Run Tool: '{$command}'");
+        // info("Run Tool: '{$command}'");
         Process::run($cmd);
 
         return $this;

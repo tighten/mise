@@ -3,13 +3,13 @@
 namespace App\Commands;
 
 use App\Recipes\Recipe;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
 use ReflectionClass;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\warning;
 
 class ApplyCommand extends Command
 {
@@ -48,8 +48,12 @@ class ApplyCommand extends Command
             foreach ($selected as $recipe) {
                 /** @var Recipe $instance */
                 $instance = app($recipe);
-                warning("Applying recipe: {$this->description($instance)}..");
-                ($instance)();
+                $instance->configure();
+                Context::push('recipes', $instance);
+            }
+
+            foreach (Context::get('recipes', []) as $recipe) {
+                ($recipe)();
             }
         }
     }
@@ -64,17 +68,12 @@ class ApplyCommand extends Command
                         return false;
                     }
 
-                    return [$recipe => $this->description($reflection->newInstanceWithoutConstructor())];
+                    return [$recipe => $reflection->newInstanceWithoutConstructor()->description()];
                 }
 
                 return false;
             })
             ->filter()
             ->flatMap(fn ($recipe) => $recipe)->toArray();
-    }
-
-    private function description(Recipe $instance): string
-    {
-        return "{$instance->name()} by {$instance->vendor()}";
     }
 }

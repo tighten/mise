@@ -18,6 +18,6 @@ class InstallPulse extends Step
 
     public function name(): string
     {
-        return 'Installing Laravel Pulse';
+        return 'Laravel Pulse';
     }
 }

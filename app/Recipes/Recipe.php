@@ -3,6 +3,7 @@
 namespace App\Recipes;
 
 use App\Steps\Step;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
 
 use function Laravel\Prompts\confirm;
@@ -14,7 +15,8 @@ abstract class Recipe
     {
         /** @var Step $step */
         $step = app($this->resolveClass($stepName));
-        warning("Run step: {$step->name()}..");
+        warning("Installing: {$step->name()}..");
+        Context::push('steps', $step::class);
         ($step)();
     }
 
@@ -22,6 +24,8 @@ abstract class Recipe
     {
         return confirm($label, default: $default);
     }
+
+    public function configure(): void {}
 
     abstract public function name(): string;
 
@@ -38,5 +42,10 @@ abstract class Recipe
         }
 
         throw new \InvalidArgumentException("Unable to resolve class for '{$stepName}'.");
+    }
+
+    public function description(): string
+    {
+        return "{$this->name()} by {$this->vendor()}";
     }
 }
