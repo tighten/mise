@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Steps\Laravel;
 
+use App\Prompts\Target;
 use App\Steps\Step;
+
+use function App\Prompts\configure;
+use function Laravel\Prompts\select;
 
 class InstallTelescope extends Step
 {
@@ -18,6 +22,6 @@ class InstallTelescope extends Step
 
     public function name(): string
     {
-        return 'Installing Laravel Telescope';
+        configure(Target::Step, 'Install Telescope..');
     }
 }
