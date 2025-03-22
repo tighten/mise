@@ -11,7 +11,15 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+use App\Tools\Artisan;
+use App\Tools\Composer;
+use App\Tools\ConsoleCommand;
+use App\Tools\Git;
+use Illuminate\Support\Facades\Process;
+
+uses(Tests\TestCase::class)->beforeEach(function () {
+    Process::preventStrayProcesses();
+})->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +32,20 @@ uses(Tests\TestCase::class)->in('Feature');
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
+expect()->extend('stepProcessRan', function (string $step, array $commands) {
+
+    Process::fake();
+
+    app($step, [
+        new Artisan,
+        new Composer,
+        new Git,
+        new ConsoleCommand,
+    ])();
+
+    foreach ($commands as $command) {
+        Process::assertRan($command);
+    }
 });
 
 /*
@@ -39,7 +59,80 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something(): void
-{
-    // ..
-}
+pest()->presets()->custom('zero', function (array $userNamespaces) {
+    return [
+        expect($userNamespaces)->toBeArray(),
+        expect('App\Traits')->toBeTraits(),
+
+        expect('App\Concerns')
+            ->toBeTraits(),
+
+        expect('App\Features')
+            ->toBeClasses()
+            ->ignoring('App\Features\Concerns'),
+
+        expect('App\Features')
+            ->toHaveMethod('resolve'),
+
+        expect('App\Exceptions')
+            ->classes()
+            ->toImplement('Throwable')
+            ->ignoring('App\Exceptions\Handler'),
+
+        expect('App')
+            ->classes()
+            ->not->toImplement(Throwable::class)
+            ->ignoring('App\Exceptions'),
+
+        expect('App\Commands')
+            ->classes()
+            ->toHaveSuffix('Command'),
+
+        expect(['App\Commands', 'App\DevelopmentCommands'])
+            ->classes()
+            ->toExtend(\LaravelZero\Framework\Commands\Command::class),
+
+        expect(['App\Commands', 'App\DevelopmentCommands'])
+            ->classes()
+            ->toHaveMethod('handle'),
+
+        expect('App')
+            ->classes()
+            ->not->toExtend('Illuminate\Console\Command')
+            ->ignoring(['App\Commands', 'App\DevelopmentCommands']),
+
+        expect('App\Listeners')
+            ->toHaveMethod('handle'),
+
+        expect('App\Notifications')
+            ->toExtend('Illuminate\Notifications\Notification'),
+
+        expect('App\Providers')
+            ->toHaveSuffix('ServiceProvider'),
+
+        expect('App\Providers')
+            ->toExtend('Illuminate\Support\ServiceProvider'),
+
+        expect('App\Providers')
+            ->not->toBeUsed(),
+
+        expect('App')
+            ->classes()
+            ->not->toExtend('Illuminate\Support\ServiceProvider')
+            ->ignoring('App\Providers'),
+
+        expect('App')
+            ->classes()
+            ->not->toHaveSuffix('ServiceProvider')
+            ->ignoring('App\Providers'),
+
+        expect([
+            'dd',
+            'ddd',
+            'dump',
+            'env',
+            'exit',
+            'ray',
+        ])->not->toBeUsed(),
+    ];
+});
