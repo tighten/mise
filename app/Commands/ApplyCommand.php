@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Recipes;
 use App\Recipes\Recipe;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
@@ -13,25 +14,12 @@ use function Laravel\Prompts\multiselect;
 
 class ApplyCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature =
         'apply {preset?*}'.
         '{--no-process : prevent processes from executing}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Apply one or more presets';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(): void
     {
         if ($this->option('no-process')) {
@@ -42,7 +30,7 @@ class ApplyCommand extends Command
         if (empty($this->argument('preset'))) {
             $selected = multiselect(
                 label: 'Which recipe(s) should I apply?',
-                options: $this->recipes(),
+                options: (new Recipes)->all(),
             );
 
             foreach ($selected as $recipe) {
@@ -56,24 +44,5 @@ class ApplyCommand extends Command
                 ($recipe)();
             }
         }
-    }
-
-    private function recipes(): array
-    {
-        return collect(config('mise.recipes'))
-            ->map(function (string $recipe) {
-                if (class_exists($recipe)) {
-                    $reflection = new ReflectionClass($recipe);
-                    if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
-                        return false;
-                    }
-
-                    return [$recipe => $reflection->newInstanceWithoutConstructor()->description()];
-                }
-
-                return false;
-            })
-            ->filter()
-            ->flatMap(fn ($recipe) => $recipe)->toArray();
     }
 }

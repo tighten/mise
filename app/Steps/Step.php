@@ -12,7 +12,6 @@ use function Laravel\Prompts\warning;
 
 abstract class Step
 {
-    // @todo load composer, git, etc.
     public function __construct(
         protected Artisan $artisan,
         protected Composer $composer,
@@ -20,13 +19,13 @@ abstract class Step
         protected ConsoleCommand $console,
     ) {}
 
+    abstract public function name(): string;
+
     public function exec(string $exec): void
     {
         warning("DO {$exec}...");
         $this->console->run($exec);
     }
-
-    abstract public function name(): string;
 
     public function configure(): void
     {
