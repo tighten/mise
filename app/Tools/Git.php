@@ -8,7 +8,7 @@ class Git extends ConsoleCommand
 {
     public function add(string $path): static
     {
-        $this->run("git add {$path}");
+        $this->run("git add '{$path}'");
 
         return $this;
     }

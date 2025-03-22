@@ -11,6 +11,10 @@
 |
 */
 
+use App\Tools\Artisan;
+use App\Tools\Composer;
+use App\Tools\ConsoleCommand;
+use App\Tools\Git;
 use Illuminate\Support\Facades\Process;
 
 uses(Tests\TestCase::class)->beforeEach(function () {
@@ -27,6 +31,22 @@ uses(Tests\TestCase::class)->beforeEach(function () {
 | to assert different things. Of course, you may extend the Expectation API at any time.
 |
 */
+
+expect()->extend('stepProcessRan', function (string $step, array $commands) {
+
+    Process::fake();
+
+    app($step, [
+        new Artisan,
+        new Composer,
+        new Git,
+        new ConsoleCommand,
+    ])();
+
+    foreach ($commands as $command) {
+        Process::assertRan($command);
+    }
+});
 
 /*
 |--------------------------------------------------------------------------

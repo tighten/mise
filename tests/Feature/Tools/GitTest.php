@@ -17,7 +17,7 @@ test('git->add("path/to/my-file")', function () {
     $git = new Git;
     $git->add($path);
 
-    Process::assertRan("git add {$path}");
+    Process::assertRan("git add '{$path}'");
 });
 
 test('git->addAll()', function () {
@@ -26,7 +26,7 @@ test('git->addAll()', function () {
     $git = new Git;
     $git->addAll();
 
-    Process::assertRan('git add .');
+    Process::assertRan("git add '.'");
 });
 
 test('git->addAll()->commit("My commit message")', function () {
@@ -36,7 +36,7 @@ test('git->addAll()->commit("My commit message")', function () {
     $git = new Git;
     $git->addAll()->commit($message);
 
-    Process::assertRan('git add .');
+    Process::assertRan("git add '.'");
     Process::assertRan("git commit -m '{$message}'");
 });
 
