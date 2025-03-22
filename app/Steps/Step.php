@@ -2,39 +2,33 @@
 
 namespace App\Steps;
 
+use App\Tools\Artisan;
+use App\Tools\Composer;
+use App\Tools\ConsoleCommand;
+use App\Tools\Git;
+use Illuminate\Support\Facades\Context;
+
+use function Laravel\Prompts\warning;
+
 abstract class Step
 {
-    public $composer;
-    public $git;
+    public function __construct(
+        protected Artisan $artisan,
+        protected Composer $composer,
+        protected Git $git,
+        protected ConsoleCommand $console,
+    ) {}
 
-    // @todo load composer, git, etc.
-    public function __construct()
+    abstract public function name(): string;
+
+    public function exec(string $exec): void
     {
-        $this->composer = new class {
-            public function requireDev()
-            {
-                echo 'composer require dev' . PHP_EOL;
-                return $this;
-            }
-        };
-        
-        $this->git = new class {
-            public function add()
-            {
-                echo 'git add' . PHP_EOL;
-                return $this;
-            }
-
-            public function commit()
-            {
-                echo 'git commit' . PHP_EOL;
-                return $this;
-            }
-        };
+        warning("DO {$exec}...");
+        $this->console->run($exec);
     }
 
-    public function exec(string $exec)
+    public function configure(): void
     {
-        echo "DO {$exec}..." . PHP_EOL;
+        Context::push('steps', static::class);
     }
 }

@@ -2,17 +2,34 @@
 
 namespace App\Recipes\Tighten;
 
+use App\Prompts\Target;
 use App\Recipes\Recipe;
+use App\Steps\Duster\Install as DusterInstall;
+
+use function App\Prompts\apply;
 
 class BasicSaas extends Recipe
 {
-    public function __invoke()
+    public function __invoke(): void
     {
-        $this->step('duster/install');
-        $this->step('duster/ci', someParameterHereOrWhatever: true);
+        apply(Target::Recipe, $this->description());
 
-        if ($this->confirm(label: 'Do you want to install our frontend tooling?')) {
-            $this->step('tighten/prettier');
-        }
+        // @todo: Changed the syntax from a string to a classname. Need to think about what I prefer.
+        $this->step(DusterInstall::class);
+
+        // $this->step('duster/ci', someParameterHereOrWhatever: true);
+        // if ($this->confirm(label: 'Do you want to install our frontend tooling?')) {
+        //     $this->step('tighten/prettier');
+        // }
+    }
+
+    public function name(): string
+    {
+        return 'Basic Saas';
+    }
+
+    public function vendor(): string
+    {
+        return 'Tighten Co.';
     }
 }
