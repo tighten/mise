@@ -4,6 +4,7 @@ namespace App\Recipes;
 
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 use function Laravel\Prompts\warning;
 
@@ -22,6 +23,16 @@ abstract class Recipe
         ($step)(...$params);
     }
 
+    public function description(): string
+    {
+        return "{$this->name()}";
+    }
+
+    public function header(): void
+    {
+        info('Applying recipe: ' . $this->name());
+    }
+
     private function resolveClass(string $stepName): string
     {
         if (class_exists($stepName)) {
@@ -35,16 +46,6 @@ abstract class Recipe
             return $derivedClass;
         }
 
-        throw new \InvalidArgumentException("Unable to resolve class for '{$stepName}'.");
-    }
-
-    public function description(): string
-    {
-        return "{$this->name()}";
-    }
-
-    public function header()
-    {
-        info('Applying recipe: ' . $this->name());
+        throw new InvalidArgumentException("Unable to resolve class for '{$stepName}'.");
     }
 }

@@ -14,7 +14,7 @@ use function Laravel\Prompts\multiselect;
 class ApplyCommand extends Command
 {
     protected $signature =
-        'apply {recipe?*}'.
+        'apply {recipe?*}' .
         '{--no-process : prevent processes from executing}';
 
     protected $description = 'Apply one or more recipes';
