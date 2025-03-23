@@ -19,8 +19,18 @@ class BasicSaas extends Recipe
         // }
     }
 
+    public function description(): string
+    {
+        return 'Install tighten/duster and optionally tighten/prettier';
+    }
+
     public function name(): string
     {
         return "Tighten's Basic SaaS Starter";
+    }
+
+    public function vendorPackage(): string
+    {
+        return 'tighten/basic-saas';
     }
 }

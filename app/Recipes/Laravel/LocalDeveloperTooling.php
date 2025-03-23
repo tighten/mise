@@ -18,8 +18,18 @@ class LocalDeveloperTooling extends Recipe
         $this->step(InstallHorizon::class);
     }
 
+    public function description(): string
+    {
+        return 'Install Laravel Packages: Pulse, Telescope, and Horizon';
+    }
+
     public function name(): string
     {
         return 'Local Developer Tooling';
+    }
+
+    public function vendorPackage(): string
+    {
+        return 'laravel/local-developer-tooling';
     }
 }

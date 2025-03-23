@@ -12,6 +12,8 @@ abstract class Recipe
 {
     abstract public function name(): string;
 
+    abstract public function vendorPackage(): string;
+
     // @todo: Test this
     public function step(string $stepName, ...$params): void
     {
@@ -23,10 +25,7 @@ abstract class Recipe
         ($step)(...$params);
     }
 
-    public function description(): string
-    {
-        return "{$this->name()}";
-    }
+    abstract public function description(): string;
 
     public function header(): void
     {
