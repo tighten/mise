@@ -12,4 +12,14 @@ class TestRecipe extends Recipe
     {
         return 'Test Recipe';
     }
+
+    public function vendorPackage(): string
+    {
+        return 'tighten/test-recipe';
+    }
+
+    public function description(): string
+    {
+        return 'A test fixture';
+    }
 }

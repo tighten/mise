@@ -28,9 +28,4 @@ class BasicSaas extends Recipe
     {
         return "Tighten's Basic SaaS Starter";
     }
-
-    public function vendorPackage(): string
-    {
-        return 'tighten/basic-saas';
-    }
 }

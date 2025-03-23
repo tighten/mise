@@ -24,4 +24,9 @@ class Recipes
             ->filter()
             ->flatMap(fn ($recipe) => $recipe)->toArray();
     }
+
+    public function keys(): array
+    {
+        return array_keys((array) config('mise.recipes'));
+    }
 }

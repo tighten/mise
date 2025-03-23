@@ -27,9 +27,4 @@ class LocalDeveloperTooling extends Recipe
     {
         return 'Local Developer Tooling';
     }
-
-    public function vendorPackage(): string
-    {
-        return 'laravel/local-developer-tooling';
-    }
 }

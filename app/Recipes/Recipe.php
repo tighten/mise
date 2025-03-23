@@ -2,7 +2,6 @@
 
 namespace App\Recipes;
 
-use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -12,15 +11,12 @@ abstract class Recipe
 {
     abstract public function name(): string;
 
-    abstract public function vendorPackage(): string;
-
     // @todo: Test this
     public function step(string $stepName, ...$params): void
     {
         $step = app($this->resolveStep($stepName));
 
         warning("Installing: {$step->name()}..");
-        Context::push('steps', $step::class);
 
         ($step)(...$params);
     }
