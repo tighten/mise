@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Steps\Laravel\InstallHorizon;
+use Illuminate\Support\Facades\Process;
+use Laravel\Prompts\Prompt;
 use Tests\Fixtures\TestRecipe;
 
 it('resolves step classes', function () {
@@ -17,4 +19,15 @@ it('resolves step classes', function () {
     ])->each(
         fn ($recipe) => expect($testRecipe->resolveStep($recipe))->toEqual(InstallHorizon::class)
     );
+});
+
+it('it runs steps', function () {
+    Process::fake();
+    Prompt::fake();
+
+    (new TestRecipe)();
+
+    Process::assertRan("echo 'Hello World'");
+    Process::assertRan("echo 'Greetings from the Test Step with Parameters'");
+    Prompt::assertOutputContains('Installing: Test Step..');
 });
