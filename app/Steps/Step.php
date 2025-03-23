@@ -26,10 +26,4 @@ abstract class Step
         warning("DO {$exec}...");
         $this->console->run($exec);
     }
-
-    public function configure(): void
-    {
-        // @todo I'd prefer moving this elsewhere and not having to call this on every one
-        Context::push('steps', static::class);
-    }
 }

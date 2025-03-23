@@ -2,41 +2,35 @@
 
 namespace App\Recipes;
 
-use App\Steps\Step;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
 
-use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\warning;
 
 abstract class Recipe
 {
+    abstract public function name(): string;
+
+    // @todo: Test this
     public function step(string $stepName, ...$params): void
     {
-        // @todo This is not passing params, need to fix
-
-        /** @var Step $step */
         $step = app($this->resolveClass($stepName));
+
         warning("Installing: {$step->name()}..");
         Context::push('steps', $step::class);
-        ($step)();
+
+        ($step)(...$params);
     }
-
-    public function confirm(string $label, bool $default = true): bool
-    {
-        return confirm($label, default: $default);
-    }
-
-    public function configure(): void {}
-
-    abstract public function name(): string;
 
     private function resolveClass(string $stepName): string
     {
         if (class_exists($stepName)) {
             return $stepName;
         }
+
+        // @todo test this
         $derivedClass = sprintf('App\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::title($part))->toArray()));
+
         if (class_exists($derivedClass)) {
             return $derivedClass;
         }
@@ -47,5 +41,10 @@ abstract class Recipe
     public function description(): string
     {
         return "{$this->name()}";
+    }
+
+    public function header()
+    {
+        info('Applying recipe: ' . $this->name());
     }
 }

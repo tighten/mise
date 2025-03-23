@@ -33,16 +33,23 @@ class ApplyCommand extends Command
             );
 
             foreach ($selected as $recipe) {
-                $instance = app($recipe);
-                $instance->configure();
-                Context::push('recipes', $instance);
-            }
-
-            foreach (Context::get('recipes', []) as $recipe) {
-                ($recipe)();
+                $this->runRecipe($recipe);
             }
         }
 
         // @todo... what if recipe *is* passed? Seems like it's not being handled.
+    }
+
+    public function runRecipe(string $recipe): void
+    {
+        $instance = app($recipe);
+        Context::push('recipes', $instance);
+        $this->header($instance);
+        ($instance)();
+    }
+
+    public function header(Recipe $recipe)
+    {
+        info('Applying recipe: ' . $recipe->name());
     }
 }
