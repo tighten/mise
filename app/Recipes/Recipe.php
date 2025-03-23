@@ -15,7 +15,7 @@ abstract class Recipe
     // @todo: Test this
     public function step(string $stepName, ...$params): void
     {
-        $step = app($this->resolveClass($stepName));
+        $step = app($this->resolveStep($stepName));
 
         warning("Installing: {$step->name()}..");
         Context::push('steps', $step::class);
@@ -33,15 +33,13 @@ abstract class Recipe
         info('Applying recipe: ' . $this->name());
     }
 
-    private function resolveClass(string $stepName): string
+    public function resolveStep(string $stepName): string
     {
         if (class_exists($stepName)) {
             return $stepName;
         }
 
-        // @todo test this
-        $derivedClass = sprintf('App\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::title($part))->toArray()));
-
+        $derivedClass = sprintf('App\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::Pascal($part))->toArray()));
         if (class_exists($derivedClass)) {
             return $derivedClass;
         }
