@@ -14,7 +14,8 @@ class BasicSaas extends Recipe
     {
         apply(Target::Recipe, $this->description());
 
-        // @todo: Changed the syntax from a string to a classname. Need to think about what I prefer.
+        // @todo: Changed the syntax from a string to a classname.
+        // Need to think about what I prefer.
         $this->step(DusterInstall::class);
 
         // $this->step('duster/ci', someParameterHereOrWhatever: true);
@@ -25,11 +26,6 @@ class BasicSaas extends Recipe
 
     public function name(): string
     {
-        return 'Basic Saas';
-    }
-
-    public function vendor(): string
-    {
-        return 'Tighten Co.';
+        return "Tighten's Basic SaaS Starter";
     }
 }

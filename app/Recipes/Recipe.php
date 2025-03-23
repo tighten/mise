@@ -31,8 +31,6 @@ abstract class Recipe
 
     abstract public function name(): string;
 
-    abstract public function vendor(): string;
-
     private function resolveClass(string $stepName): string
     {
         if (class_exists($stepName)) {
@@ -48,6 +46,6 @@ abstract class Recipe
 
     public function description(): string
     {
-        return "{$this->name()} by {$this->vendor()}";
+        return "{$this->name()}";
     }
 }

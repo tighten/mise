@@ -39,11 +39,4 @@ class LocalDeveloperTooling extends Recipe
     {
         return 'Local Developer Tooling';
     }
-
-    public function vendor(): string
-    {
-        // @todo Hm. This wasn't made by Laravel, so I don't think this makes sense.
-        // Do recipes get vendors?? I was only thinking about steps having them IIRC.
-        return 'Laravel';
-    }
 }
