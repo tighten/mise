@@ -56,9 +56,9 @@ class ApplyCommand extends Command
             );
         }
 
-        if (($missingRecipies = array_diff($selectedRecipes, $recipes->keys())) > 0) {
+        if (($missingRecipes = array_diff($selectedRecipes, $recipes->keys())) > 0) {
             error('The following recipes were not found and will be skipped');
-            note(collect($missingRecipies)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
+            note(collect($missingRecipes)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
         }
 
         return collect(config('mise.recipes'))->filter(

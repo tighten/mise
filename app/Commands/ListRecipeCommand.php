@@ -17,14 +17,14 @@ class ListRecipeCommand extends Command
         $this->newLine();
         $this->line('Mise <info>v' . config('app.version') . '</info> ');
         $this->newLine();
-        $this->line('<fg=yellow>Recipies:</>');
+        $this->line('<fg=yellow>Recipes:</>');
         $this->line($this->recipes());
         $this->line('<fg=yellow>Applying recipes:</>');
-        $this->line('    mise apply [recipies]');
+        $this->line('    mise apply [recipes]');
         $this->newLine();
         $this->line('<fg=yellow>Examples:</>');
-        $this->line('    mise apply tighten/basic-sass');
-        $this->line('    mise apply tighten/basic-sass laravel/local-developer-tooling');
+        $this->line('    mise apply tighten/basic-saas');
+        $this->line('    mise apply tighten/basic-saas laravel/local-developer-tooling');
     }
 
     private function recipes(): string
