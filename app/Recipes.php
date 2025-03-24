@@ -16,12 +16,17 @@ class Recipes
                         return false;
                     }
 
-                    return [$recipe => $reflection->newInstanceWithoutConstructor()->description()];
+                    return [$recipe => $reflection->newInstanceWithoutConstructor()->name()];
                 }
 
                 return false;
             })
             ->filter()
             ->flatMap(fn ($recipe) => $recipe)->toArray();
+    }
+
+    public function keys(): array
+    {
+        return array_keys((array) config('mise.recipes'));
     }
 }

@@ -32,7 +32,7 @@
         "mockery/mockery": "^1.6.12",
         "pestphp/pest": "^3.7.1",
         "spatie/ray": "^1.41.5",
-        "tightenco/duster": "^3.1"
+        "tightenco/duster": "^3.2"
     },
     "autoload": {
         "psr-4": {
