@@ -18,18 +18,16 @@ class ListRecipeCommand extends Command
 
         $padding = $recipes->keys()->max(fn ($recipe) => strlen($recipe) + 4);
 
-        $recipeList = $recipes->reduce(function (string $carry, string $recipeClass, $key) use ($padding) {
-            $recipe = app($recipeClass);
-
-            return sprintf($carry . "  <info>%-{$padding}s</info> %s\n", $key, $recipe->description());
-        }, '');
+        $recipeList = $recipes->reduce(function (?string $carry, string $recipeClass, $key) use ($padding) {
+            return sprintf($carry . "  <info>%-{$padding}s</info> %s\n", $key, app($recipeClass)->description());
+        });
 
         $this->newLine();
         $this->line(sprintf('Mise <info>v%s</info>', config('app.version')));
         $this->newLine();
         $this->line('<fg=yellow>Recipies:</>');
         $this->line($recipeList);
-        $this->line('<fg=yellow>Usage:</>');
+        $this->line('<fg=yellow>Applying recipes:</>');
         $this->line('    mise apply [recipies]');
         $this->newLine();
         $this->line('<fg=yellow>Examples:</>');
