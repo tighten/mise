@@ -1,7 +1,7 @@
 # Mise ("meez")
 
 > [!WARNING]  
-> This is a blank Laravel Zero repo at the moment. Everything's just in the README as I try to figure out the best API.
+> This tool is in alpha.
 
 A CLI tool to automatically apply preset steps to (likely, but not necessarily, new) Laravel applications.
 
@@ -13,9 +13,9 @@ One common use case could be for a starter kit creator to automate building new 
 
 I also wonder whether we could distribute Mise recipes as standalone configurations--almost like "here's your starter kit, a Mise config file".
 
-## Vision
+## Usage
 
-I imagine it'll look like this. Once Mise is installed globally with Composer, you'll install a new Laravel app:
+Once Mise is installed globally with Composer, you'll install a new Laravel app:
 
 ### Usage
 
@@ -36,9 +36,9 @@ Or you can use it interactively, where Prompts will let you choose which you wan
 mise apply
 ```
 
-### How it would work
+### How works
 
-I can imagine Mise comes with predefined "steps"; for example, a step named "duster" could do the following:
+Mise comes with predefined "steps"; for example, a step named `duster/install` takes the following steps:
 
 - `composer require-dev tightenco/duster`
 - Run `./vendor/bin/duster github-actions`
@@ -46,19 +46,15 @@ I can imagine Mise comes with predefined "steps"; for example, a step named "dus
 - Run `./vendor/bin/duster fix`
 - Run `git add . && git commit -m "Run Duster"`
 
-The definition for this step would be built into code in Mise, using some combination of convenience helpers that make common tasks (e.g. "git commit with message", "composer require dev") easy; then recipes would include this step.
+Recipes can include any steps they want.
 
-### How recipes would be defined/loaded
+### How recipes are defined/loaded
 
-Recipes would be defined... that's the hard part. I know some can be defined in Mise. And I know some can be defined locally. But what is a safe way to define recipes to be shared?
-
-- Composer is too heavy, I think, unless one person/group wanted to release a whole pack of steps/recipes
-- Pulling from gists makes it too easy for someone just to update it to something nefarious and then you're running untested bash scripts on your machine
-- Clumsiest but safest is to just have a central site where you can share recipes but you have to manually copy to them to your local machine
+Recipes are defined in the Mise codebase for now. In the future, you'll be able to have your own local recipes, and also pull them from a Mise SaaS.
 
 Also maybe some useful thing where you can set a configuration item so if you run `mise default` or something, it'll run a predefined set of recipes, so you can say "all my new Laravel apps should have these three recipes run" as your default.
 
-### Building a step
+### What a step looks like
 
 OK, so I'm imagining a step is single file (?), either a PHP class or a procedural PHP file. It *could* be yaml, which would be cleaner, but wouldn't allow for arbitrary PHP. Maybe allow both?
 
@@ -72,36 +68,31 @@ class Install extends Step
     public function __invoke()
     {
         $this->composer->requireDev('tightenco/duster');
-        $this->git->add('.')->commit('Install Duster');
-        // or $this->git->addAndCommit('Install Duster'), not sure
-        $this->exec('./vendor/bin/duster fix');
-        $this->git->add('.')->commit('Run Duster');
+        $this->git->addAndCommit('Install Duster');
+        $this->vendorExec('duster fix');
+        $this->git->addAndCommit('Run Duster');
     }
 }
 ```
 
-I can imagine we'll want tooling to create files, replace content in files, rename or move files. More Git tooling, more Composer tooling, NPM tooling.
+We're working on building even more tooling to make common startup steps easy.
 
-Some of this will come from having a `filesystem` component directly available, and, of course, access to the entire Laravel world through the container. Some it'd be nice to have one-off commands or even little suites of tools (e.g this `git` helper described above) to simplify some of the steps. I'll be looking to Lambo and Valet for at least some inspiration on those.
-
-### Building a recipe
+### What a recipe looks like
 
 Let's imagine we have a recipe for creating a new Tighten SaaS. What steps do we want to take after `laravel new`?
 
-We could have it be a simple YML/JSON file... just with a list of steps... or it can be a PHP file so it can have standalone work outside of steps, or pass configuration items to steps?
-
 ```php
 class Tighten extends Recipe
 {
     public function __invoke()
     {
         $this->step('duster/install');
-        $this->step('duster/ci', someParameterHereOrWhatever: true);
+        $this->step('duster/ci');
     }
 }
 ```
 
-We can also take user input, which is easier as a PHP class:
+We can also take user input:
 
 ```php
 class Tighten extends Recipe
@@ -109,7 +100,7 @@ class Tighten extends Recipe
     public function __invoke()
     {
         $this->step('duster/install');
-        $this->step('duster/ci', someParameterHereOrWhatever: true);
+        $this->step('duster/ci');
 
         if (confirm(label: 'Do you want to install our frontend tooling?')) {
             $this->step('tighten/prettier');
