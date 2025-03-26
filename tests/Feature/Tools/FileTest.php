@@ -91,14 +91,14 @@ test('file->deleteLinesContaining(...) with non-existent line', function () {
     expect(Storage::get($path))->toBe($content);
 });
 
-test('file->addToMethod(...)', function () {
+test('file->prependToMethod(...)', function () {
     $path = 'test.php';
     $content = 'echo "Hello, World!";';
     Storage::put($path, "<?php\n\nclass Test {\n    public function testMethod()\n    {\n        // Comment\n    }\n}");
 
-    (new File)->addToMethod($path, 'testMethod', $content);
+    (new File)->prependToMethod($path, 'testMethod', $content);
 
-    expect(Storage::get($path))->toBe("<?php\n\nclass Test {\n    public function testMethod()\n    {\n        // Comment\n        {$content}\n    }\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nclass Test {\n    public function testMethod()\n    {\n        {$content}\n        // Comment\n    }\n}");
 });
 
 test('file->addToJson(...)', function () {

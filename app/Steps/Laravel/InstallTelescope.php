@@ -25,7 +25,7 @@ class InstallTelescope extends Step
             $this->composer->requireDev('laravel/telescope');
             $this->artisan->runCustom('telescope:install');
             $this->file->deleteLinesContaining('bootstrap/providers.php', 'TelescopeServiceProvider::class');
-            $this->file->addToMethod('app/Providers/AppServiceProvider.php', 'register', $this->manuallyRegisterTelescope());
+            $this->file->prependToMethod('app/Providers/AppServiceProvider.php', 'register', $this->manuallyRegisterTelescope());
             $this->file->addToJson('composer.json', 'extra.laravel.dont-discover', 'laravel/telescope');
             $this->artisan->migrate();
             $this->git->addAndCommit('Install Laravel Telescope -- local only');

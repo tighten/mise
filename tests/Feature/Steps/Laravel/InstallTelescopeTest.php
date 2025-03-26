@@ -32,5 +32,6 @@ it('Installs Laravel Telescope -- dev', function () {
         "git add '.' && git commit -m 'Install Laravel Telescope -- local only'",
     ]);
 
-    // @todo: Assert against the other things we expect the dev version to do
+    // ... it does other things but doesn't totally seem like it's worth testing
+    // that certain calls are made.
 });
