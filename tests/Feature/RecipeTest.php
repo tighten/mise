@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Steps\Laravel\InstallHorizon;
 use Illuminate\Support\Facades\Process;
 use Laravel\Prompts\Prompt;

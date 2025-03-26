@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Steps\Laravel;
 
 use App\Steps\Step;
@@ -12,19 +10,36 @@ class InstallTelescope extends Step
 {
     public function __invoke(): void
     {
-        // @todo: Also, gotta fix this .. this is being run in the tests
-        // @todo: Is this being stored anywhere? And is there any reason not to just do it inline?
-        // ... I guess the thing it offers is the ability to ask your recipe questions all at once,
-        // but I don't know if that's worth the technical complexity it adds.
-        // select(label: 'Should Telescope be available in Production?', options: [
-        //     true => 'Yes',
-        //     false => 'No',
-        // ]);
+        $prod = select(label: 'Should Telescope be available in Production?', options: [
+            true => 'Yes',
+            false => 'No',
+        ]);
 
-        $this->composer->requireDev('laravel/telescope');
-        $this->artisan->runCustom('telescope:install');
-        $this->artisan->migrate();
-        $this->git->addAndCommit('Install Laravel Telescope');
+        if ($prod) {
+            $this->composer->require('laravel/telescope');
+            $this->artisan->runCustom('telescope:install');
+            $this->artisan->migrate();
+            $this->git->addAndCommit('Install Laravel Telescope');
+        } else {
+            // @todo: Test all these new methods manually (so far only tested in tests)
+            $this->composer->requireDev('laravel/telescope');
+            $this->artisan->runCustom('telescope:install');
+            $this->file->deleteLinesContaining('bootstrap/providers.php', 'TelescopeServiceProvider::class');
+            $this->file->addToMethod('app/Providers/AppServiceProvider.php', 'register', $this->manuallyRegisterTelescope());
+            $this->file->addToJson('composer.json', 'extra.laravel.dont-discover', 'laravel/telescope');
+            $this->artisan->migrate();
+            $this->git->addAndCommit('Install Laravel Telescope -- local only');
+        }
+    }
+
+    protected function manuallyRegisterTelescope(): string
+    {
+        return <<<EOT
+        if (\$this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            \$this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            \$this->app->register(TelescopeServiceProvider::class);
+        }
+        EOT;
     }
 
     public function name(): string

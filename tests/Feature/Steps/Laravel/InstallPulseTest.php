@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Steps\Laravel;
 
 use App\Steps\Laravel\InstallPulse;
+use Laravel\Prompts\Prompt;
 
 it('Installs Laravel Pulse', function () {
+    Prompt::fake();
+
     expect()->stepProcessRan(InstallPulse::class, [
         'composer require laravel/pulse',
         "php artisan vendor:publish --provider='Laravel\Pulse\PulseServiceProvider'",

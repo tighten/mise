@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\DevelopmentCommands;
 
 use Illuminate\Support\Facades\Process;

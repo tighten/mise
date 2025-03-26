@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Recipes\Recipe;
 use App\Steps\Step;
 

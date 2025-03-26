@@ -1,14 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Tools\Artisan;
 use Illuminate\Support\Facades\Process;
-use Laravel\Prompts\Prompt;
-
-beforeEach(function () {
-    Prompt::fake();
-});
 
 test('artisan->vendorPublish(...)', function () {
     Process::fake();

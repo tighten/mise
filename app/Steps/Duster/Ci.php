@@ -9,7 +9,7 @@ class Ci extends Step
     public function __invoke(): void
     {
         $this->console->vendorExec('duster github-actions');
-        $this->git->addAll()->commit("Add Duster's GitHub Actions workflow");
+        $this->git->addAndCommit("Add Duster's GitHub Actions workflow");
     }
 
     public function name(): string
