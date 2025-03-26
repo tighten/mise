@@ -9,17 +9,13 @@ class Install extends Step
     public function __invoke(): void
     {
         $this->composer->requireDev('tightenco/duster');
-        $this->git->add('.')->commit('Install Duster');
-        // $this->git->addAll()->commit('Install Duster');
-        // or $this->git->addAndCommit('Install Duster'), not sure
-
+        $this->git->addAll()->commit('Install Duster');
         $this->exec('./vendor/bin/duster fix');
-        $this->git->add('.')->commit('Run Duster');
-
+        $this->git->addAll()->commit('Run Duster');
     }
 
     public function name(): string
     {
-        return 'Install Duster';
+        return 'Install and run Duster';
     }
 }
