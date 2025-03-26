@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Recipes\Laravel;
+namespace App\Recipes;
 
 use App\Recipes\Recipe;
 use App\Steps\Laravel\InstallHorizon;
 use App\Steps\Laravel\InstallPulse;
 use App\Steps\Laravel\InstallTelescope;
 
-class LocalDeveloperTooling extends Recipe
+class LaravelLocalDeveloperTooling extends Recipe
 {
     public function __invoke(): void
     {
@@ -25,6 +23,6 @@ class LocalDeveloperTooling extends Recipe
 
     public function name(): string
     {
-        return 'Local Developer Tooling';
+        return 'Laravel Local Developer Tooling';
     }
 }

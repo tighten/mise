@@ -11,7 +11,6 @@ abstract class Recipe
 {
     abstract public function name(): string;
 
-    // @todo: Test this
     public function step(string $stepName, ...$params): void
     {
         $step = app($this->resolveStep($stepName));

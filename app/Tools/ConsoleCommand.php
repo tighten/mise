@@ -10,7 +10,7 @@ use function Laravel\Prompts\info;
 
 class ConsoleCommand
 {
-    public function run(string $command): static
+    public function exec(string $command): static
     {
         $cmd = $command;
         // info("Run Tool: '{$command}'");
@@ -19,8 +19,8 @@ class ConsoleCommand
         return $this;
     }
 
-    public function vendorRun(string $command): void
+    public function vendorExec(string $command): void
     {
-        $this->run("vendor/bin/{$command}");
+        $this->exec("vendor/bin/{$command}");
     }
 }

@@ -2,7 +2,7 @@
 
 return [
     'recipes' => [
-        'tighten/basic-saas' => \App\Recipes\Tighten\BasicSaas::class,
-        'laravel/local-developer-tooling' => \App\Recipes\Laravel\LocalDeveloperTooling::class,
+        'tighten-basic-saas' => \App\Recipes\TightenBasicSaas::class,
+        'laravel-local-developer-tooling' => \App\Recipes\LaravelLocalDeveloperTooling::class,
     ],
 ];

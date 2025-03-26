@@ -10,7 +10,7 @@ class TestStep extends Step
 {
     public function __invoke(?string $message = 'Hello World'): void
     {
-        $this->console->run("echo '{$message}'");
+        $this->console->exec("echo '{$message}'");
     }
 
     public function name(): string

@@ -10,22 +10,22 @@ beforeEach(function () {
     Prompt::fake();
 });
 
-test('console->run(...)', function () {
+test('console->exec(...)', function () {
     Process::fake();
 
     $consoleCommand = new ConsoleCommand;
 
-    $consoleCommand->run('command --random --flags');
+    $consoleCommand->exec('command --random --flags');
 
     Process::assertRan('command --random --flags');
 });
 
-test('console->vendorRun(...)', function () {
+test('console->vendorExec(...)', function () {
     Process::fake();
 
     $consoleCommand = new ConsoleCommand;
 
-    $consoleCommand->vendorRun('command --random --flags');
+    $consoleCommand->vendorExec('command --random --flags');
 
     Process::assertRan('vendor/bin/command --random --flags');
 });

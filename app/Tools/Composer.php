@@ -8,11 +8,11 @@ class Composer extends ConsoleCommand
 {
     public function requireDev(string $package): void
     {
-        $this->run("composer require {$package} --dev");
+        $this->exec("composer require {$package} --dev");
     }
 
     public function require(string $package): void
     {
-        $this->run("composer require {$package}");
+        $this->exec("composer require {$package}");
     }
 }

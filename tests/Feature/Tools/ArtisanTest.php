@@ -28,7 +28,7 @@ test('artisan->migrate()', function () {
     Process::assertRan('php artisan migrate');
 });
 
-test('artisan->run(...)', function () {
+test('artisan->runCustom(...)', function () {
     Process::fake();
     $artisan = new Artisan;
 

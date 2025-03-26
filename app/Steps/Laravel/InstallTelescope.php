@@ -16,12 +16,10 @@ class InstallTelescope extends Step
         // @todo: Is this being stored anywhere? And is there any reason not to just do it inline?
         // ... I guess the thing it offers is the ability to ask your recipe questions all at once,
         // but I don't know if that's worth the technical complexity it adds.
-        /*
-        select(label: 'Should Telescope be available in Production?', options: [
-            true => 'Yes',
-            false => 'No',
-        ]);
-        */
+        // select(label: 'Should Telescope be available in Production?', options: [
+        //     true => 'Yes',
+        //     false => 'No',
+        // ]);
 
         $this->composer->requireDev('laravel/telescope');
         $this->artisan->runCustom('telescope:install');

@@ -5,7 +5,9 @@ namespace App\Steps;
 use App\Tools\Artisan;
 use App\Tools\Composer;
 use App\Tools\ConsoleCommand;
+use App\Tools\File;
 use App\Tools\Git;
+use App\Tools\Npm;
 
 use function Laravel\Prompts\warning;
 
@@ -16,6 +18,8 @@ abstract class Step
         protected Composer $composer,
         protected Git $git,
         protected ConsoleCommand $console,
+        protected Npm $npm,
+        protected File $file,
     ) {}
 
     abstract public function name(): string;
@@ -23,6 +27,6 @@ abstract class Step
     public function exec(string $exec): void
     {
         warning("DO {$exec}...");
-        $this->console->run($exec);
+        $this->console->exec($exec);
     }
 }
