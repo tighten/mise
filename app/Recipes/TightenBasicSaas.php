@@ -2,7 +2,6 @@
 
 namespace App\Recipes;
 
-use App\Recipes\Recipe;
 use function Laravel\Prompts\confirm;
 
 class TightenBasicSaas extends Recipe

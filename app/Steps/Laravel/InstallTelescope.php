@@ -32,6 +32,11 @@ class InstallTelescope extends Step
         }
     }
 
+    public function name(): string
+    {
+        return 'Laravel Telescope';
+    }
+
     protected function manuallyRegisterTelescope(): string
     {
         return <<<EOT
@@ -40,10 +45,5 @@ class InstallTelescope extends Step
             \$this->app->register(TelescopeServiceProvider::class);
         }
         EOT;
-    }
-
-    public function name(): string
-    {
-        return 'Laravel Telescope';
     }
 }

@@ -51,10 +51,10 @@ class File extends ConsoleCommand
     {
         $lines = collect(explode("\n", Storage::get($path)));
 
-        $methodStartIndex = $lines->search(fn($line) => str_contains($line, "function $method("));
-        $braceIndex = $lines->slice($methodStartIndex)->search(fn($line) => str_contains($line, '{'));
+        $methodStartIndex = $lines->search(fn ($line) => str_contains($line, "function {$method}("));
+        $braceIndex = $lines->slice($methodStartIndex)->search(fn ($line) => str_contains($line, '{'));
         $braceIndentation = 4 + strlen($lines->slice($methodStartIndex, $braceIndex)->first()) - strlen(ltrim($lines->slice($methodStartIndex, $braceIndex)->first()));
-        $content = collect(explode("\n", $content))->map(fn($line) => str_repeat(' ', $braceIndentation) . $line);
+        $content = collect(explode("\n", $content))->map(fn ($line) => str_repeat(' ', $braceIndentation) . $line);
 
         $return = $lines->splice(0, $braceIndex + 1)->concat($content)->concat($lines);
 
@@ -74,7 +74,7 @@ class File extends ConsoleCommand
             if ($depth === count($keys) - 1) {
                 $current[$segment] = $value;
             } else {
-                if (!isset($current[$segment]) || !is_array($current[$segment])) {
+                if (! isset($current[$segment]) || ! is_array($current[$segment])) {
                     $current[$segment] = [];
                 }
 

@@ -2,7 +2,6 @@
 
 namespace App\Recipes;
 
-use App\Recipes\Recipe;
 use App\Steps\Laravel\InstallHorizon;
 use App\Steps\Laravel\InstallPulse;
 use App\Steps\Laravel\InstallTelescope;

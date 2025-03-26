@@ -116,7 +116,7 @@ test('file->addToJson(...)', function () {
         'other' => 'new',
         'newKey' => 'newValue',
         'otherNewKey' => [
-            'subsection' => 'internal'
+            'subsection' => 'internal',
         ],
     ]);
 });
@@ -130,6 +130,6 @@ test('file->addToJson(...) updates existing key', function () {
 
     $result = json_decode(Storage::get($path), true);
     expect($result)->toBe([
-        'existingKey' => 'newValue'
+        'existingKey' => 'newValue',
     ]);
 });

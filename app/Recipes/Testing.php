@@ -2,8 +2,6 @@
 
 namespace App\Recipes;
 
-use App\Recipes\Recipe;
-
 class Testing extends Recipe
 {
     public function __invoke(): void
