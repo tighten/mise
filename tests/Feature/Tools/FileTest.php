@@ -103,17 +103,22 @@ test('file->prependToMethod(...)', function () {
 
 test('file->addToJson(...)', function () {
     $path = 'test.json';
-    $initialJson = ['existing' => 'value', 'other' => 'old'];
+    $initialJson = ['existing' => 'value', 'other' => 'old', 'v' => ['a' => '!']];
     Storage::put($path, json_encode($initialJson));
 
     (new File)->addToJson($path, 'newKey', 'newValue');
     (new File)->addToJson($path, 'otherNewKey.subsection', 'internal');
     (new File)->addToJson($path, 'other', 'new');
+    (new File)->addToJson($path, 'v.b', '?');
 
     $result = json_decode(Storage::get($path), true);
     expect($result)->toBe([
         'existing' => 'value',
         'other' => 'new',
+        'v' => [
+            'a' => '!',
+            'b' => '?',
+        ],
         'newKey' => 'newValue',
         'otherNewKey' => [
             'subsection' => 'internal',

@@ -79,6 +79,7 @@ class File extends ConsoleCommand
 
     // @todo: create appendToMethod
 
+    // @todo: Slashes being added to keys in json files, should not be
     public function addToJson(string $path, string $key, string $value): static
     {
         $json = json_decode(Storage::get($path), true);

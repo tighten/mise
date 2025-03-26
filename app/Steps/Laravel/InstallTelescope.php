@@ -21,7 +21,6 @@ class InstallTelescope extends Step
             $this->artisan->migrate();
             $this->git->addAndCommit('Install Laravel Telescope');
         } else {
-            // @todo: Test all these new methods manually (so far only tested in tests)
             $this->composer->requireDev('laravel/telescope');
             $this->artisan->runCustom('telescope:install');
             $this->file->deleteLinesContaining('bootstrap/providers.php', 'TelescopeServiceProvider::class');
