@@ -10,16 +10,16 @@ class Recipes
     {
         return collect(config('mise.recipes'))
             ->map(function (string $recipe) {
-                if (class_exists($recipe)) {
-                    $reflection = new ReflectionClass($recipe);
-                    if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
-                        return false;
-                    }
-
-                    return [$recipe => $reflection->newInstanceWithoutConstructor()->name()];
+                if (! class_exists($recipe)) {
+                    return false;
                 }
 
-                return false;
+                $reflection = new ReflectionClass($recipe);
+                if (! $reflection->isSubclassOf('App\\Recipes\\Recipe')) {
+                    return false;
+                }
+
+                return [$recipe => $reflection->newInstanceWithoutConstructor()->name()];
             })
             ->filter()
             ->flatMap(fn ($recipe) => $recipe)->toArray();
