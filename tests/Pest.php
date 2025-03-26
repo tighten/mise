@@ -124,7 +124,7 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
         expect('App')
             ->classes()
             ->not->toHaveSuffix('ServiceProvider')
-            ->ignoring('App\Providers'),
+            ->ignoring(['App\Providers', 'App\Steps\Mise\ConfigureAppServiceProvider']),
 
         expect([
             'dd',

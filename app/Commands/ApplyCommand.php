@@ -4,8 +4,10 @@ namespace App\Commands;
 
 use App\Recipes;
 use App\Recipes\Recipe;
+use App\Steps\Mise\ConfigureAppServiceProvider;
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
+use Throwable;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
@@ -20,6 +22,7 @@ class ApplyCommand extends Command
 
     protected $description = 'Apply one or more recipes';
 
+    /** @throws Throwable */
     public function handle(): void
     {
         if ($this->option('no-process')) {
@@ -30,6 +33,8 @@ class ApplyCommand extends Command
         foreach ($this->selectedRecipes() as $recipe) {
             $this->runRecipe($recipe);
         }
+
+        $this->runPostRecipeSteps();
     }
 
     public function runRecipe(string $recipe): void
@@ -64,5 +69,11 @@ class ApplyCommand extends Command
         return collect(config('mise.recipes'))->filter(
             fn (string $recipeClass, string $key) => in_array($key, $selectedRecipes)
         )->toArray();
+    }
+
+    /** @throws Throwable */
+    private function runPostRecipeSteps(): void
+    {
+        app(ConfigureAppServiceProvider::class)();
     }
 }

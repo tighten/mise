@@ -25,6 +25,7 @@
         "php": "^8.2.0",
         "illuminate/log": "^11.5",
         "illuminate/queue": "^v11.44.2",
+        "illuminate/view": "^11.5",
         "laravel-zero/framework": "^11.36.1"
     },
     "require-dev": {

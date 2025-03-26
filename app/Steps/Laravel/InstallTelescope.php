@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Steps\Laravel;
 
 use App\Steps\Step;
+use Illuminate\Support\Facades\Context;
 
 use function Laravel\Prompts\select;
 
@@ -12,16 +13,10 @@ class InstallTelescope extends Step
 {
     public function __invoke(): void
     {
-        // @todo: Also, gotta fix this .. this is being run in the tests
-        // @todo: Is this being stored anywhere? And is there any reason not to just do it inline?
-        // ... I guess the thing it offers is the ability to ask your recipe questions all at once,
-        // but I don't know if that's worth the technical complexity it adds.
-        // select(label: 'Should Telescope be available in Production?', options: [
-        //     true => 'Yes',
-        //     false => 'No',
-        // ]);
+        $this->shouldInstallLocally()
+            ? $this->localOnlyInstall()
+            : $this->composer->require('laravel/telescope');
 
-        $this->composer->requireDev('laravel/telescope');
         $this->artisan->runCustom('telescope:install');
         $this->artisan->migrate();
         $this->git->addAndCommit('Install Laravel Telescope');
@@ -30,5 +25,24 @@ class InstallTelescope extends Step
     public function name(): string
     {
         return 'Laravel Telescope';
+    }
+
+    private function shouldInstallLocally(): bool
+    {
+        return ! select(label: 'Should Telescope be available in Production?', options: [
+            true => 'Yes',
+            false => 'No',
+        ]);
+    }
+
+    private function localOnlyInstall(): void
+    {
+        $this->composer->requireDev('laravel/telescope');
+        Context::push('register_local_only_providers', '
+            if (class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+                $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+                $this->app->register(TelescopeServiceProvider::class);
+            }',
+        );
     }
 }
