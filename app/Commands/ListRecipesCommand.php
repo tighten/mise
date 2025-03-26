@@ -4,7 +4,7 @@ namespace App\Commands;
 
 use LaravelZero\Framework\Commands\Command;
 
-class ListRecipeCommand extends Command
+class ListRecipesCommand extends Command
 {
     protected $signature = 'list:recipes';
 
@@ -21,8 +21,8 @@ class ListRecipeCommand extends Command
         $this->line('    mise apply [recipes]');
         $this->newLine();
         $this->line('<fg=yellow>Examples:</>');
-        $this->line('    mise apply tighten/basic-saas');
-        $this->line('    mise apply tighten/basic-saas laravel/local-developer-tooling');
+        $this->line('    mise apply tighten-basic-saas');
+        $this->line('    mise apply tighten-basic-saas laravel-local-developer-tooling');
     }
 
     private function recipes(): string
