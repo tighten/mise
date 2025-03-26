@@ -4,7 +4,6 @@ namespace App\Tools;
 
 use Illuminate\Support\Facades\Storage;
 
-// @todo: Test this class
 class File extends ConsoleCommand
 {
     public function create(string $path, string $content = ''): void
@@ -19,29 +18,21 @@ class File extends ConsoleCommand
 
     public function rename(string $oldPath, string $newPath): void
     {
-        if (Storage::exists($oldPath)) {
-            Storage::move($oldPath, $newPath);
-        }
+        Storage::move($oldPath, $newPath);
     }
 
     public function move(string $source, string $destination): void
     {
-        if (Storage::exists($source)) {
-            Storage::move($source, $destination);
-        }
+        Storage::move($source, $destination);
     }
 
     public function copy(string $source, string $destination): void
     {
-        if (Storage::exists($source)) {
-            Storage::copy($source, $destination);
-        }
+        Storage::copy($source, $destination);
     }
 
     public function delete(string $path): void
     {
-        if (Storage::exists($path)) {
-            Storage::delete($path);
-        }
+        Storage::delete($path);
     }
 }
