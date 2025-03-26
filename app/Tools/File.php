@@ -6,48 +6,62 @@ use Illuminate\Support\Facades\Storage;
 
 class File extends ConsoleCommand
 {
-    public function create(string $path, string $content = ''): void
+    public function create(string $path, string $content = ''): static
     {
         Storage::put($path, $content);
+
+        return $this;
     }
 
-    public function append(string $path, string $content): void
+    public function append(string $path, string $content): static
     {
         Storage::append($path, $content);
+
+        return $this;
     }
 
-    public function rename(string $oldPath, string $newPath): void
+    public function rename(string $oldPath, string $newPath): static
     {
         Storage::move($oldPath, $newPath);
+
+        return $this;
     }
 
-    public function move(string $source, string $destination): void
+    public function move(string $source, string $destination): static
     {
         Storage::move($source, $destination);
+
+        return $this;
     }
 
-    public function copy(string $source, string $destination): void
+    public function copy(string $source, string $destination): static
     {
         Storage::copy($source, $destination);
+
+        return $this;
     }
 
-    public function delete(string $path): void
+    public function delete(string $path): static
     {
         Storage::delete($path);
+
+        return $this;
     }
 
-    public function deleteLinesContaining(string $path, string $content): void
+    public function deleteLinesContaining(string $path, string $content): static
     {
         $lines = explode("\n", Storage::get($path));
         $lines = array_filter($lines, function ($line) use ($content) {
             return strpos($line, $content) === false;
         });
         Storage::put($path, implode("\n", $lines));
+
+        return $this;
     }
 
     // This could likely be refactored to use Reflection, but it seems unlikely it'll be nearly as elegant;
     // because we're only operating on fresh framework code, I hope we can assume the method signature is well-formed
-    public function prependToMethod(string $path, string $method, string $content): void
+    public function prependToMethod(string $path, string $method, string $content): static
     {
         $lines = collect(explode("\n", Storage::get($path)));
 
@@ -59,11 +73,13 @@ class File extends ConsoleCommand
         $return = $lines->splice(0, $braceIndex + 1)->concat($content)->concat($lines);
 
         Storage::put($path, $return->join("\n"));
+
+        return $this;
     }
 
     // @todo: create appendToMethod
 
-    public function addToJson(string $path, string $key, string $value): void
+    public function addToJson(string $path, string $key, string $value): static
     {
         $json = json_decode(Storage::get($path), true);
 
@@ -83,5 +99,7 @@ class File extends ConsoleCommand
         }
 
         Storage::put($path, json_encode($json, JSON_PRETTY_PRINT));
+
+        return $this;
     }
 }

@@ -14,7 +14,9 @@
 use App\Tools\Artisan;
 use App\Tools\Composer;
 use App\Tools\ConsoleCommand;
+use App\Tools\File;
 use App\Tools\Git;
+use App\Tools\Npm;
 use Illuminate\Support\Facades\Process;
 
 uses(Tests\TestCase::class)->beforeEach(function () {
@@ -41,6 +43,8 @@ expect()->extend('stepProcessRan', function (string $step, array $commands) {
         new Composer,
         new Git,
         new ConsoleCommand,
+        new Npm,
+        new File,
     ])();
 
     foreach ($commands as $command) {

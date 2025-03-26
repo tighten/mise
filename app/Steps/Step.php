@@ -24,9 +24,11 @@ abstract class Step
 
     abstract public function name(): string;
 
-    public function exec(string $exec): void
+    public function exec(string $exec): static
     {
         warning("DO {$exec}...");
         $this->console->exec($exec);
+
+        return $this;
     }
 }

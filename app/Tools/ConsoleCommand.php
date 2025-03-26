@@ -17,8 +17,10 @@ class ConsoleCommand
         return $this;
     }
 
-    public function vendorExec(string $command): void
+    public function vendorExec(string $command): static
     {
         $this->exec("vendor/bin/{$command}");
+
+        return $this;
     }
 }
