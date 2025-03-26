@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\Tools\Npm;
 use Illuminate\Support\Facades\Process;
