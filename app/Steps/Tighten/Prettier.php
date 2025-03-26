@@ -16,7 +16,7 @@ class Prettier extends Step
             'singleQuote' => true,
             'tabWidth' => 4,
             'trailingCommaPHP' => true,
-        ]));
+        ], JSON_PRETTY_PRINT));
 
         $this->file->create('.prettierignore', "node_modules\nvendor\nstorage\nbootstrap/cache\npublic\n");
         $this->npm->addScript('format', 'prettier --write resources/');
