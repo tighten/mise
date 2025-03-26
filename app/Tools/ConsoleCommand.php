@@ -11,7 +11,7 @@ class ConsoleCommand
     public function exec(string $command): static
     {
         $cmd = $command;
-        // info("Run Tool: '{$command}'");
+        // info(" > '{$command}'");
         Process::run($cmd);
 
         return $this;
