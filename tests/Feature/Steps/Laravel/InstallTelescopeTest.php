@@ -3,8 +3,13 @@
 namespace Tests\Steps\Laravel;
 
 use App\Steps\Laravel\InstallTelescope;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Key;
 use Laravel\Prompts\Prompt;
+
+beforeEach(function () {
+    Storage::fake();
+});
 
 it('Installs Laravel Telescope -- production', function () {
     Prompt::fake([Key::ENTER]);

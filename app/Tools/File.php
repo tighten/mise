@@ -47,12 +47,12 @@ class File extends ConsoleCommand
 
     public function addToMethod(string $path, string $method, string $content): void
     {
-        $lines = explode("\n", storage::get($path));
+        $lines = explode("\n", Storage::get($path));
         // @todo: find the opening brace of the method; add the content after it.
         // Un-ideal, but finding the closing brace is likely significantly more complex.
         // simplest solution: assume they're following psr correctly, we can add a new line
         // after the first `{` line after the first line containing "function $method("
-        storage::put($path, implode("\n", $lines));
+        Storage::put($path, implode("\n", $lines));
     }
 
     public function addToJson(string $path, string $key, string $value): void
