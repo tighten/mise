@@ -2,18 +2,42 @@
 
 namespace App\Recipes;
 
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+
+use function Laravel\Prompts\warning;
+
 abstract class Recipe
 {
-    public function step(string $stepName, ...$params)
+    abstract public function name(): string;
+
+    public function step(string $stepName, ...$params): void
     {
-        // @todo Convert string step names, build step, and pass params
-        echo "Perform {$stepName}.." . PHP_EOL;
+        $step = app($this->resolveStep($stepName));
+
+        warning("Installing: {$step->name()}..");
+
+        ($step)(...$params);
     }
 
-    public function confirm(string $label, bool $default = true)
+    abstract public function description(): string;
+
+    public function header(): void
     {
-        echo "Conform: {$label}? ";
-        echo $default ? '[Y\n]' : '[y\N]';
-        echo PHP_EOL;
+        info('Applying recipe: ' . $this->name());
+    }
+
+    public function resolveStep(string $stepName): string
+    {
+        if (class_exists($stepName)) {
+            return $stepName;
+        }
+
+        $derivedClass = sprintf('App\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::Pascal($part))->toArray()));
+        if (class_exists($derivedClass)) {
+            return $derivedClass;
+        }
+
+        throw new InvalidArgumentException("Unable to resolve class for '{$stepName}'.");
     }
 }
