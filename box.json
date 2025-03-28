@@ -15,5 +15,10 @@
     "compactors": [
         "KevinGH\\Box\\Compactor\\Php",
         "KevinGH\\Box\\Compactor\\Json"
+    ],
+    "blacklist": [
+        "duster",
+        "duster.phar",
+        "pint"
     ]
 }

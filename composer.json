@@ -28,7 +28,8 @@
         "illuminate/log": "^11.5",
         "illuminate/queue": "^v11.44.2",
         "mockery/mockery": "^1.6.12",
-        "pestphp/pest": "^3.7.1"
+        "pestphp/pest": "^3.7.1",
+        "tightenco/duster": "^3.2"
     },
     "autoload": {
         "psr-4": {
