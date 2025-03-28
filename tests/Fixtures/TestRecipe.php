@@ -26,4 +26,9 @@ class TestRecipe extends Recipe
     {
         return 'A test fixture';
     }
+
+    public function slug(): string
+    {
+        return 'testing';
+    }
 }

@@ -11,6 +11,8 @@ abstract class Recipe
 {
     abstract public function name(): string;
 
+    abstract public function slug(): string;
+
     public function step(string $stepName, ...$params): void
     {
         $step = app($this->resolveStep($stepName));

@@ -20,6 +20,11 @@ class ApplyCommand extends Command
 
     protected $description = 'Apply one or more recipes';
 
+    public function __construct(protected Recipes $recipes)
+    {
+        parent::__construct();
+    }
+
     public function handle(): void
     {
         if ($this->option('no-process')) {
@@ -46,22 +51,21 @@ class ApplyCommand extends Command
 
     private function selectedRecipes(): array
     {
-        $recipes = new Recipes;
         $selectedRecipes = $this->argument('recipe');
 
         if (empty($selectedRecipes)) {
             return multiselect(
                 label: 'Which recipe(s) should I apply?',
-                options: $recipes->all(),
+                options: $this->recipes->allForSelect(),
             );
         }
 
-        if (count($missingRecipes = array_diff($selectedRecipes, $recipes->keys())) > 0) {
+        if (count($missingRecipes = array_diff($selectedRecipes, $this->recipes->keys())) > 0) {
             error('The following recipes were not found and will be skipped');
             note(collect($missingRecipes)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
         }
 
-        return collect(config('mise.recipes'))->filter(
+        return $this->recipes->all()->filter(
             fn (string $recipeClass, string $key) => in_array($key, $selectedRecipes)
         )->toArray();
     }

@@ -24,4 +24,9 @@ class LaravelLocalDeveloperTooling extends Recipe
     {
         return 'Laravel Local Developer Tooling';
     }
+
+    public function slug(): string
+    {
+        return 'laravel-local-developer-tooling';
+    }
 }

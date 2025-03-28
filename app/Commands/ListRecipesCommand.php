@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Recipes;
 use LaravelZero\Framework\Commands\Command;
 
 class ListRecipesCommand extends Command
@@ -9,6 +10,11 @@ class ListRecipesCommand extends Command
     protected $signature = 'list:recipes';
 
     protected $description = 'List the available recipes';
+
+    public function __construct(protected Recipes $recipes)
+    {
+        parent::__construct();
+    }
 
     public function handle(): void
     {
@@ -27,7 +33,7 @@ class ListRecipesCommand extends Command
 
     private function recipes(): string
     {
-        $recipes = collect(config('mise.recipes'));
+        $recipes = $this->recipes->all();
         $padding = $recipes->keys()->max(fn ($recipe) => strlen($recipe) + 4);
 
         return $recipes->reduce(

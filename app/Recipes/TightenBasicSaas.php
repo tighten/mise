@@ -28,4 +28,9 @@ class TightenBasicSaas extends Recipe
     {
         return "Tighten's Basic SaaS Starter";
     }
+
+    public function slug(): string
+    {
+        return 'tighten-basic-saas';
+    }
 }

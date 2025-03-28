@@ -18,4 +18,9 @@ class Testing extends Recipe
     {
         return 'Testing';
     }
+
+    public function slug(): string
+    {
+        return 'testing';
+    }
 }
