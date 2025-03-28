@@ -4,8 +4,8 @@ namespace App;
 
 use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class Recipes
 {
@@ -17,7 +17,7 @@ class Recipes
             $this->loadFilesInPath($customRecipesDir);
         }
 
-        return $this->allInPath(app_path('Recipes'))->when(is_dir($customRecipesDir), function (Collection $recipes) use ($customRecipesDir){
+        return $this->allInPath(app_path('Recipes'))->when(is_dir($customRecipesDir), function (Collection $recipes) use ($customRecipesDir) {
             return $recipes->merge($this->allInPath($customRecipesDir));
         });
     }
@@ -39,7 +39,7 @@ class Recipes
     protected function allInPath(string $path): Collection
     {
         return collect(File::files($path))
-            ->map(fn ($file) => "App\\Recipes\\" . pathinfo($file, PATHINFO_FILENAME))
+            ->map(fn ($file) => 'App\\Recipes\\' . pathinfo($file, PATHINFO_FILENAME))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))
             ->mapWithKeys(fn ($class) => [(new $class)->slug() => $class]);
     }
