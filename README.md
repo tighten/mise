@@ -3,15 +3,13 @@
 > [!WARNING]  
 > This tool is in alpha.
 
-A CLI tool to automatically apply preset steps to (likely, but not necessarily, new) Laravel applications.
+A CLI tool to automatically apply preset steps to new Laravel applications, using concepts like composable recipes built from individual steps.
 
-Using concepts like composable recipes built from individual steps.
-
-Spiritual successor to [Lambo's presets](https://github.com/tighten/lambo/pull/185).
-
-One common use case could be for a starter kit creator to automate building new versions of their starter kit; every time Laravel releases a new version, you can build again by running a new Laravel install and then running your Mise steps.
-
-I also wonder whether we could distribute Mise recipes as standalone configurations--almost like "here's your starter kit, a Mise config file".
+**Use cases:**
+- Individual dev runs pre-made Mise recipes to kick off their app development
+- Individual dev or agency creates a recipe they use for all their new apps, and applies with Mise
+- Starter kit creator distributes their kit as a Mise recipe
+- Starter kit creator automates the building of their new repo-based (`laravel new` style) starter kit using a Mise recipe that runs and pushes afresh every time there's a new version of Laravel available
 
 ## Usage
 
@@ -45,13 +43,13 @@ Mise comes with predefined "steps"; for example, a step named `duster/install` t
 - `./vendor/bin/duster fix`
 - `git add . && git commit -m "Run Duster"`
 
-Recipes can include any steps they want.
+Recipes are a list of steps, along with optional conditional logic around which steps to run.
 
 ### How recipes are defined/loaded
 
 Recipes are defined in the Mise codebase for now. In the future, you'll be able to have your own local recipes, and also pull them from a Mise SaaS.
 
-Also maybe some useful thing where you can set a configuration item so if you run `mise default` or something, it'll run a predefined set of recipes, so you can say "all my new Laravel apps should have these three recipes run" as your default.
+We're also considering allowing you to set a default recipe to run, so you can maybe run `mise default` on every new project.
 
 ### What a step looks like
 
