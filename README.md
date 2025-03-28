@@ -41,10 +41,9 @@ mise apply
 Mise comes with predefined "steps"; for example, a step named `duster/install` takes the following steps:
 
 - `composer require-dev tightenco/duster`
-- Run `./vendor/bin/duster github-actions`
-- Run `git add . && git commit -m "Install Duster"`
-- Run `./vendor/bin/duster fix`
-- Run `git add . && git commit -m "Run Duster"`
+- `git add . && git commit -m "Install Duster"`
+- `./vendor/bin/duster fix`
+- `git add . && git commit -m "Run Duster"`
 
 Recipes can include any steps they want.
 
@@ -56,9 +55,7 @@ Also maybe some useful thing where you can set a configuration item so if you ru
 
 ### What a step looks like
 
-OK, so I'm imagining a step is single file (?), either a PHP class or a procedural PHP file. It *could* be yaml, which would be cleaner, but wouldn't allow for arbitrary PHP. Maybe allow both?
-
-Let's imagine `duster` is a step. Maybe this? Will keep working on the API...
+Steps are individual PHP files. Here's what the above Duster install step looks like:
 
 ```php
 namespace Steps/Duster;
