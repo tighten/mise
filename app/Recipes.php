@@ -5,7 +5,6 @@ namespace App;
 use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class Recipes
 {
@@ -46,8 +45,8 @@ class Recipes
 
     protected function loadFilesInPath(string $path): void
     {
-        collect(File::files($path))
-            ->filter(fn ($fileName) => Str::endsWith($fileName, '.php'))
-            ->map(fn ($fileName) => require $fileName);
+        foreach (glob($path . '/*.php') as $file) {
+            require($file);
+        }
     }
 }
