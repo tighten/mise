@@ -34,7 +34,7 @@ Or you can use it interactively, where Prompts will let you choose which you wan
 mise apply
 ```
 
-### How works
+### How it works
 
 Mise comes with predefined "steps"; for example, a step named `duster/install` takes the following steps:
 
@@ -100,6 +100,41 @@ class Tighten extends Recipe
         if (confirm(label: 'Do you want to install our frontend tooling?')) {
             $this->step('tighten/prettier');
         }
+    }
+}
+```
+
+### How to create a custom recipe
+
+If you'd like to build your own recipe, you can!
+
+Build a class that extends `App/Recipe` and place it in `~/.mise/Recipes`. It'll just show up!
+
+Here's an example:
+
+```php
+// ~/.mise/Recipes/EchoDate.php
+<?php
+
+namespace App\Recipes;
+
+class EchoDate extends Recipe
+{
+    public string $slug = 'echo-date';
+
+    public function __invoke(): void
+    {
+        echo "Today's date is " . date('Y-m-j');
+    }
+
+    public function description(): string
+    {
+        return 'Echo the date.';
+    }
+
+    public function name(): string
+    {
+        return 'Echo date';
     }
 }
 ```
