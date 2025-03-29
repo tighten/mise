@@ -9,6 +9,7 @@ use App\Steps\Step;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\progress;
 use function Laravel\Prompts\select;
+use function Laravel\Prompts\spin;
 
 class InstallBreeze extends Step
 {
@@ -33,18 +34,31 @@ class InstallBreeze extends Step
 
         $progress = progress(label: 'Composer require Breeze', steps: 3);
         $progress->start();
-        $this->composer->require('laravel/breeze');
+        spin(
+            callback: fn () => $this->composer->requireDev('laravel/breeze'),
+            message: 'composer require laravel/breeze --dev'
+        );
+        $progress->advance();
 
         $progress->label('Installing Breeze with configured options');
-        $this->artisan->runCustom("breeze:install{$options} -- {$stack}");
+        spin(
+            callback: fn () => $this->artisan->runCustom("breeze:install{$options} -- {$stack}"),
+            message: "php artisan breeze:install{$options} -- {$stack}"
+        );
         $progress->advance();
 
         $progress->label('Run migrations');
-        $this->artisan->migrate();
+        spin(
+            callback: fn () => $this->artisan->migrate(),
+            message: 'php artisan migrate'
+        );
         $progress->advance();
 
         $progress->label('Commit changes');
-        $this->git->addAndCommit('Install Laravel Breeze');
+        spin(
+            callback: fn () => $this->git->addAndCommit('Install Laravel Breeze'),
+            message: 'git add . && git commit -m "Install Laravel Breeze"'
+        );
         $progress->advance();
         $progress->finish();
     }
