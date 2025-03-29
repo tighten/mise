@@ -3,7 +3,7 @@
 namespace App\Recipes\Breeze;
 
 use App\Recipes\Recipe;
-
+use App\Steps\Laravel\InstallSanctum;
 // @todo: Figure out if we want to actually offer subdirectory-loaded recipes or what
 class ApiOnly extends Recipe
 {
@@ -11,22 +11,25 @@ class ApiOnly extends Recipe
 
     public function __invoke(): void
     {
-        // Require laravel/sanctum
-        // Publish config/sanctum.php and config/cors.php if installing Sanctum doesn't
-        // Run any other Sanctum install steps (in Laravel 11, that was modifying bootstrap/app.php and app/Providers/AppServiceProvider.php)
+        $this->step(InstallSanctum::class);
+        // Run any other Sanctum install steps (in Laravel 11, included modifying app/Providers/AppServiceProvider.php)
         // Publish/modify a bunch of controllers
-        // Delete un-used frontend files
-        /*
-        - vite.config.js
-        - package.json
-        - resources/*
-        */
-        // Add resoures/views/.gitkeep file
+
+        // @todo: Update the step command to allow this syntax
+        $this->step('Delete un-used frontend files', function () {
+            // Delete un-used frontend files
+            /*
+            - vite.config.js
+            - package.json
+            - resources/*
+            */
+
+            // Add resources/views/.gitkeep file
+        });
+
         // Modify Auth tests
         // Publish expected rotues/web.php
         // Publish expected routes/auth.php
-        // Publish expected routes/api.php
-        // Publish Personal access tokens migration
     }
 
     public function description(): string
