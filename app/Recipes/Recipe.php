@@ -9,7 +9,7 @@ use function Laravel\Prompts\warning;
 
 abstract class Recipe
 {
-    public static $slug;
+    public string $slug;
 
     abstract public function name(): string;
 

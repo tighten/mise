@@ -4,7 +4,7 @@ namespace App\Recipes;
 
 class Testing extends Recipe
 {
-    public static $slug = 'testing';
+    public string $slug = 'testing';
 
     public function __invoke(): void
     {

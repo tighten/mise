@@ -6,7 +6,7 @@ use function Laravel\Prompts\confirm;
 
 class TightenBasicSaas extends Recipe
 {
-    public static $slug = 'tighten-basic-saas';
+    public string $slug = 'tighten-basic-saas';
 
     public function __invoke(): void
     {

@@ -6,7 +6,7 @@ use App\Recipes\Recipe;
 
 class TestRecipe extends Recipe
 {
-    public static $slug = 'test-recipe';
+    public string $slug = 'test-recipe';
 
     public function __invoke(): void
     {

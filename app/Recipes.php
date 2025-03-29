@@ -40,7 +40,7 @@ class Recipes
         return collect(File::files($path))
             ->map(fn ($file) => 'App\\Recipes\\' . pathinfo($file, PATHINFO_FILENAME))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))
-            ->mapWithKeys(fn ($class) => [$class::$slug => $class]);
+            ->mapWithKeys(fn ($class) => [(new $class)->slug => $class]);
     }
 
     protected function loadFilesInPath(string $path): void

@@ -8,7 +8,7 @@ use App\Steps\Laravel\InstallTelescope;
 
 class LaravelLocalDeveloperTooling extends Recipe
 {
-    public static $slug = 'laravel-local-developer-tooling';
+    public string $slug = 'laravel-local-developer-tooling';
 
     public function __invoke(): void
     {
