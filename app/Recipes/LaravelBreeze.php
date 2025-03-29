@@ -2,7 +2,7 @@
 
 namespace App\Recipes;
 
-class Breeze extends Recipe
+class LaravelBreeze extends Recipe
 {
     public string $slug = 'laravel-breeze';
 
