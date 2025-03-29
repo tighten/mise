@@ -6,6 +6,8 @@ use App\Recipes\Recipe;
 
 class TestRecipe extends Recipe
 {
+    public string $slug = 'test-recipe';
+
     public function __invoke(): void
     {
         $this->step(TestStep::class);

@@ -4,6 +4,8 @@ namespace App\Recipes;
 
 class Testing extends Recipe
 {
+    public string $slug = 'testing';
+
     public function __invoke(): void
     {
         $this->step('tighten/prettier');

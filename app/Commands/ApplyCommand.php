@@ -44,7 +44,7 @@ class ApplyCommand extends Command
         info('Applying recipe: ' . $recipe->name());
     }
 
-    private function selectedRecipes(): array
+    protected function selectedRecipes(): array
     {
         $recipes = new Recipes;
         $selectedRecipes = $this->argument('recipe');
@@ -52,7 +52,7 @@ class ApplyCommand extends Command
         if (empty($selectedRecipes)) {
             return multiselect(
                 label: 'Which recipe(s) should I apply?',
-                options: $recipes->all(),
+                options: $recipes->allForSelect(),
             );
         }
 
@@ -61,7 +61,7 @@ class ApplyCommand extends Command
             note(collect($missingRecipes)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
         }
 
-        return collect(config('mise.recipes'))->filter(
+        return $recipes->all()->filter(
             fn (string $recipeClass, string $key) => in_array($key, $selectedRecipes)
         )->toArray();
     }
