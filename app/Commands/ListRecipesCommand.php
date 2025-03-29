@@ -14,7 +14,7 @@ class ListRecipesCommand extends Command
     public function handle(): void
     {
         $this->newLine();
-        $this->line('Mise <info>v' . config('app.version') . '</info> ');
+        $this->line('Mise <info>' . config('app.version') . '</info> ');
         $this->newLine();
         $this->line('<fg=yellow>Recipes:</>');
         $this->line($this->recipes());
