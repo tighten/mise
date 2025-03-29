@@ -11,11 +11,6 @@ class ListRecipesCommand extends Command
 
     protected $description = 'List the available recipes';
 
-    public function __construct(protected Recipes $recipes)
-    {
-        parent::__construct();
-    }
-
     public function handle(): void
     {
         $this->newLine();
@@ -33,7 +28,7 @@ class ListRecipesCommand extends Command
 
     private function recipes(): string
     {
-        $recipes = $this->recipes->all();
+        $recipes = (new Recipes)->all();
         $padding = $recipes->keys()->max(fn ($recipe) => strlen($recipe) + 4);
 
         return $recipes->reduce(

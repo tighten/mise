@@ -9,9 +9,9 @@ use function Laravel\Prompts\warning;
 
 abstract class Recipe
 {
-    abstract public function name(): string;
+    public static $slug;
 
-    abstract public function slug(): string;
+    abstract public function name(): string;
 
     public function step(string $stepName, ...$params): void
     {

@@ -4,6 +4,8 @@ namespace App\Recipes;
 
 class Testing extends Recipe
 {
+    public static $slug = 'testing';
+
     public function __invoke(): void
     {
         $this->step('tighten/prettier');
@@ -17,10 +19,5 @@ class Testing extends Recipe
     public function name(): string
     {
         return 'Testing';
-    }
-
-    public function slug(): string
-    {
-        return 'testing';
     }
 }

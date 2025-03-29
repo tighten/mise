@@ -6,6 +6,8 @@ use App\Recipes\Recipe;
 
 class TestRecipe extends Recipe
 {
+    public static $slug = 'test-recipe';
+
     public function __invoke(): void
     {
         $this->step(TestStep::class);
@@ -25,10 +27,5 @@ class TestRecipe extends Recipe
     public function description(): string
     {
         return 'A test fixture';
-    }
-
-    public function slug(): string
-    {
-        return 'testing';
     }
 }

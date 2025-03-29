@@ -6,6 +6,8 @@ use function Laravel\Prompts\confirm;
 
 class TightenBasicSaas extends Recipe
 {
+    public static $slug = 'tighten-basic-saas';
+
     public function __invoke(): void
     {
         $this->step('duster/install');
@@ -27,10 +29,5 @@ class TightenBasicSaas extends Recipe
     public function name(): string
     {
         return "Tighten's Basic SaaS Starter";
-    }
-
-    public function slug(): string
-    {
-        return 'tighten-basic-saas';
     }
 }
