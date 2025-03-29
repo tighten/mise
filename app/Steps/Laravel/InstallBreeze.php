@@ -31,7 +31,7 @@ class InstallBreeze extends Step
         $options .= confirm('Would you like dark mode support?', false) ? ' --dark' : '';
         $options .= confirm('Would you like to use the Pest testing framework?', false) ? ' --pest' : '';
 
-        $progress = progress(label: 'Composer require Breeze', steps: 5);
+        $progress = progress(label: 'Composer require Breeze', steps: 3);
         $progress->start();
         $this->composer->require('laravel/breeze');
 
@@ -41,14 +41,6 @@ class InstallBreeze extends Step
 
         $progress->label('Run migrations');
         $this->artisan->migrate();
-        $progress->advance();
-
-        $progress->label('Install NPM dependencies');
-        $this->npm->install();
-        $progress->advance();
-
-        $progress->label('Build assets');
-        $this->npm->run('build');
         $progress->advance();
 
         $progress->label('Commit changes');
