@@ -21,23 +21,28 @@ class Recipes
         });
     }
 
+    public function allKeysAndClasses(): Collection
+    {
+        return $this->all()->mapWithKeys(fn ($recipe) => [$recipe->slug => $recipe::class]);
+    }
+
     public function allForSelect(): array
     {
         return $this->all()
-            ->flatMap(function (string $recipe) {
-                return [$recipe => (new $recipe)->name()];
+            ->flatMap(function (Recipe $recipe) {
+                return [$recipe::class => $recipe->name()];
             })
             ->toArray();
     }
 
-    public function findByKey(string $key): string
+    public function findByKey(string $key): Recipe
     {
-        return $this->all()->firstOrFail(fn ($class, $slug) => $slug === $key);
+        return $this->all()->firstOrFail(fn ($instance) => $instance->slug === $key);
     }
 
     public function keys(): array
     {
-        return $this->all()->keys()->toArray();
+        return $this->allKeysAndClasses()->keys()->toArray();
     }
 
     protected function allInPath(string $path): Collection
@@ -47,7 +52,7 @@ class Recipes
                 trim(str_replace([$path, '.php'], '', $file->getPathname()), '/')
             ))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))
-            ->mapWithKeys(fn ($class) => [(new $class)->slug => $class]);
+            ->map(fn ($class) => (new $class));
     }
 
     protected function loadFilesInPath(string $path): void

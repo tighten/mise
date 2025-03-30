@@ -32,8 +32,7 @@ abstract class Recipe
 
     public function recipe(string $recipeName): void
     {
-        $recipeClass = (new Recipes)->findByKey($recipeName);
-        (new $recipeClass)();
+        (new Recipes)->findByKey($recipeName)();
     }
 
     public function callableStep(string $stepName, $callback): void

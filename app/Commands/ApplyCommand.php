@@ -61,7 +61,7 @@ class ApplyCommand extends Command
             note(collect($missingRecipes)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
         }
 
-        return $recipes->all()->filter(
+        return $recipes->allKeysAndClasses()->filter(
             fn (string $recipeClass, string $key) => in_array($key, $selectedRecipes)
         )->toArray();
     }

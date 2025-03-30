@@ -5,7 +5,7 @@ use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 
 it('returns all valid recipe classes as collection', function () {
-    $recipes = (new Recipes)->all();
+    $recipes = (new Recipes)->allKeysAndClasses();
 
     expect($recipes)->toBeInstanceOf(Collection::class);
 
@@ -39,3 +39,5 @@ it('returns all valid recipe keys', function () {
         expect($key)->toBeString();
     }
 });
+
+// @todo: Add tests for findByKey, all, allKeysAndClasses, allForSelect, others?
