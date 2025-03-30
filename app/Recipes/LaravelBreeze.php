@@ -8,6 +8,7 @@ class LaravelBreeze extends Recipe
 
     public function __invoke(): void
     {
+        $this->recipe('laravel-breeze/api-only');
         // Which breeze stack would you like to install?
         // 1. Blade with Alpine
         // 2. Livewire (Volt Class API) with Alpine

@@ -41,7 +41,7 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    public function delete(string $path): static
+    public function delete(array|string $path): static
     {
         Storage::delete($path);
 

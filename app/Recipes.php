@@ -30,6 +30,11 @@ class Recipes
             ->toArray();
     }
 
+    public function findByKey(string $key): string
+    {
+        return $this->all()->firstOrFail(fn ($class, $slug) => $slug === $key);
+    }
+
     public function keys(): array
     {
         return $this->all()->keys()->toArray();
@@ -37,8 +42,10 @@ class Recipes
 
     protected function allInPath(string $path): Collection
     {
-        return collect(File::files($path))
-            ->map(fn ($file) => 'App\\Recipes\\' . pathinfo($file, PATHINFO_FILENAME))
+        return collect(File::allFiles($path))
+            ->map(fn ($file) => 'App\\Recipes\\' . str_replace('/', '\\',
+                trim(str_replace([$path, '.php'], '', $file->getPathname()), '/')
+            ))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))
             ->mapWithKeys(fn ($class) => [(new $class)->slug => $class]);
     }

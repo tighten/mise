@@ -2,6 +2,8 @@
 
 namespace App\Recipes;
 
+use App\Recipes;
+use App\Steps\Step;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -9,12 +11,18 @@ use function Laravel\Prompts\warning;
 
 abstract class Recipe
 {
+    abstract public function name(): string;
+    abstract public function description(): string;
+
     public string $slug;
 
-    abstract public function name(): string;
-
-    public function step(string $stepName, ...$params): void
+    public function step(string $stepName, array|callable $params = []): void
     {
+        if (is_callable($params)) {
+            $this->callableStep($stepName, $params);
+            return;
+        }
+
         $step = app($this->resolveStep($stepName));
 
         warning("Installing: {$step->name()}..");
@@ -22,11 +30,18 @@ abstract class Recipe
         ($step)(...$params);
     }
 
-    abstract public function description(): string;
-
-    public function header(): void
+    public function recipe(string $recipeName): void
     {
-        info('Applying recipe: ' . $this->name());
+        $recipeClass = (new Recipes)->findByKey($recipeName);
+        (new $recipeClass)();
+    }
+
+    public function callableStep(string $stepName, $callback): void
+    {
+        warning("Installing: {$stepName}..");
+
+        // Create a fake step object, and pass it to the callback
+        $callback(app(Step::class));
     }
 
     public function resolveStep(string $stepName): string
@@ -41,5 +56,10 @@ abstract class Recipe
         }
 
         throw new InvalidArgumentException("Unable to resolve class for '{$stepName}'.");
+    }
+
+    public function header(): void
+    {
+        info('Applying recipe: ' . $this->name());
     }
 }
