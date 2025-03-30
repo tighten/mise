@@ -40,9 +40,9 @@ class Recipes
         return $this->all()->firstOrFail(fn ($instance) => $instance->slug === $key);
     }
 
-    public function keys(): array
+    public function keys(): Collection
     {
-        return $this->allKeysAndClasses()->keys()->toArray();
+        return $this->allKeysAndClasses()->keys();
     }
 
     protected function allInPath(string $path): Collection

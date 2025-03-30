@@ -56,7 +56,7 @@ class ApplyCommand extends Command
             );
         }
 
-        if (count($missingRecipes = array_diff($selectedRecipes, $recipes->keys())) > 0) {
+        if (count($missingRecipes = array_diff($selectedRecipes, $recipes->keys()->toArray())) > 0) {
             error('The following recipes were not found and will be skipped');
             note(collect($missingRecipes)->map(fn ($recipe) => "  {$recipe}")->implode("\n"));
         }
