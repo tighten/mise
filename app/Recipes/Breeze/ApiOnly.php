@@ -15,11 +15,26 @@ class ApiOnly extends Recipe
     public function __invoke(): void
     {
         $this->step(InstallSanctum::class);
-        // @todo Run any other Sanctum install steps (in Laravel 11, included modifying app/Providers/AppServiceProvider.php)
-        // @todo Publish/modify a bunch of controllers
+        // @todo: Any of these that are Sanctum-specific, move to InstallSanctum
+
+        // @todo Publish updated App/Providers/AppServiceProvider
+
+        // @todo Publish new/updated versions of bunch of controllers
+        // Auth/VerifyEmailController
+        // Auth/AuthenticatedSessionController
+        // Auth/EmailVerificationNotificationController
+        // Auth/NewPasswordController
+        // Auth/PasswordResetLinkController
+        // Auth/RegisteredUserController
+
+        // @todo Publish app/Http/Middleware/EnsureEmailIsVerified
+        // @todo Publish app/Http/Requests/Auth/LoginRequest
+
+        // Modify Auth tests (@todo)
+        // Publish expected routes/web.php (@todo)
+        // Publish expected routes/auth.php (@todo)
 
         $this->step('Delete un-used frontend files', function (Step $step) {
-            // Delete un-used frontend files
             $step->file->delete([
                 'vite.config.js',
                 'package.json',
@@ -28,10 +43,6 @@ class ApiOnly extends Recipe
 
             $step->file->create('resources/views/.gitkeep');
         });
-
-        // Modify Auth tests (@todo)
-        // Publish expected routes/web.php (@todo)
-        // Publish expected routes/auth.php (@todo)
     }
 
     public function description(): string
