@@ -60,6 +60,17 @@ class File extends ConsoleCommand
         return $this;
     }
 
+    public function stubAll(string $path): static
+    {
+        $files = glob(base_path("stubs/{$path}/*"));
+
+        foreach ($files as $file) {
+            $this->stub($path . '/' . $file, $file);
+        }
+
+        return $this;
+    }
+
     public function deleteLinesContaining(string $path, string $content): static
     {
         $lines = explode("\n", Storage::get($path));
