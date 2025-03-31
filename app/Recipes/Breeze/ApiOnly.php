@@ -23,8 +23,6 @@ class ApiOnly extends Recipe
             $step->file->delete([
                 'vite.config.js',
                 'package.json',
-                // @todo: Figure out how to use glob patterns here; currently this just
-                // pushes the whole way down to unlink(), which doesn't resolve glob patterns
                 'resources/**/*',
             ]);
 

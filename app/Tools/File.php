@@ -43,9 +43,7 @@ class File extends ConsoleCommand
 
     public function delete(array|string $path): static
     {
-        Storage::delete($path);
-
-        return $this;
+        return $this->globEach($path, fn ($file) => Storage::delete($file));
     }
 
     public function deleteLinesContaining(string $path, string $content): static
@@ -99,6 +97,27 @@ class File extends ConsoleCommand
         }
 
         Storage::put($path, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        return $this;
+    }
+
+    /**
+     * Allow passing globbing patterns or arrays of globbing patterns.
+     */
+    protected function globEach(array|string $path, callable $callback): static
+    {
+        $path = is_array($path) ? $path : [$path];
+
+        foreach ($path as $eachPath) {
+            // Checking for glob-targeted strings; we may have to expand this to support more complex glob patterns
+            if (str_contains($eachPath, '*')) {
+                foreach (glob($eachPath) as $file) {
+                    $callback($file);
+                }
+            } else {
+                $callback($eachPath);
+            }
+        }
 
         return $this;
     }
