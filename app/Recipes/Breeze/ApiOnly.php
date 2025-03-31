@@ -4,6 +4,7 @@ namespace App\Recipes\Breeze;
 
 use App\Recipes\Recipe;
 use App\Steps\Laravel\InstallSanctum;
+use App\Steps\PublishStubs;
 use App\Steps\Step;
 
 class ApiOnly extends Recipe
@@ -14,10 +15,7 @@ class ApiOnly extends Recipe
     public function __invoke(): void
     {
         $this->step(InstallSanctum::class);
-
-        $this->step('Publish stub files', function (Step $step) {
-            $step->file->stubAll('breeze/api-only');
-        });
+        $this->step(PublishStubs::class, 'breeze/api-only');
 
         $this->step('Modify App Service Provider', function (Step $step) {
             $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
