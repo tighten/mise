@@ -16,12 +16,12 @@ class ListRecipesCommand extends Command
         $this->newLine();
         $this->line('  <fg=white;options=bold>Mise</>  <fg=green;options=bold>' . config('app.version') . '</> ');
         $this->newLine();
-        $this->line('  <fg=yellow;options=bold>Recipes:</>');
+        $this->line('  <fg=yellow;options=bold>RECIPES</>');
         $this->line($this->recipes());
-        $this->line('  <fg=yellow;options=bold>Applying recipes:</>');
-        $this->line('    mise apply [recipes]');
+        $this->line('  <fg=yellow;options=bold>USAGE</>');
+        $this->line('    mise apply recipe [recipe ...]');
         $this->newLine();
-        $this->line('  <fg=yellow;options=bold>Examples:</>');
+        $this->line('  <fg=yellow;options=bold>EXAMPLES</>');
         $this->line('    mise apply tighten-basic-saas');
         $this->line('    mise apply tighten-basic-saas laravel-local-developer-tooling');
     }
