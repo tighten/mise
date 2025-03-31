@@ -14,7 +14,7 @@ abstract class Recipe
     abstract public function name(): string;
     abstract public function description(): string;
 
-    public string $slug;
+    public string $key;
 
     public function step(string $stepName, array|callable $params = []): void
     {

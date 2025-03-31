@@ -7,9 +7,10 @@ use App\Steps\Laravel\InstallSanctum;
 use App\Steps\Step;
 
 // @todo: Figure out if we want to actually offer subdirectory-loaded recipes or what
+// @todo: This isn't really intended to be a recipe, but just a collection of steps for other recipes to call. Do we expose this to the list/CLI?
 class ApiOnly extends Recipe
 {
-    public string $slug = 'laravel-breeze/api-only';
+    public string $key = 'laravel-breeze/api-only';
 
     public function __invoke(): void
     {

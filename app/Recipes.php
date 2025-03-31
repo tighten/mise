@@ -23,7 +23,7 @@ class Recipes
 
     public function allKeysAndClasses(): Collection
     {
-        return $this->all()->mapWithKeys(fn ($recipe) => [$recipe->slug => $recipe::class]);
+        return $this->all()->mapWithKeys(fn ($recipe) => [$recipe->key => $recipe::class]);
     }
 
     public function allForSelect(): array
@@ -37,7 +37,7 @@ class Recipes
 
     public function findByKey(string $key): Recipe
     {
-        return $this->all()->firstOrFail(fn ($instance) => $instance->slug === $key);
+        return $this->all()->firstOrFail(fn ($instance) => $instance->key === $key);
     }
 
     public function keys(): Collection

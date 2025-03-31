@@ -20,8 +20,8 @@ it('returns all valid recipe classes as collection', function () {
 
     expect($recipes)->toBeInstanceOf(Collection::class);
 
-    foreach ($recipes as $slug => $class) {
-        expect($slug)->toBeString();
+    foreach ($recipes as $key => $class) {
+        expect($key)->toBeString();
         expect($class)->toBeString();
 
         expect(new $class)->toBeInstanceOf(Recipe::class);

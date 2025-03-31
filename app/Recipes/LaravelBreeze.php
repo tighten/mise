@@ -4,7 +4,7 @@ namespace App\Recipes;
 
 class LaravelBreeze extends Recipe
 {
-    public string $slug = 'laravel-breeze';
+    public string $key = 'laravel-breeze';
 
     public function __invoke(): void
     {
