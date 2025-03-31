@@ -2,6 +2,7 @@
 
 namespace App\Tools;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class File extends ConsoleCommand
@@ -44,6 +45,19 @@ class File extends ConsoleCommand
     public function delete(array|string $path): static
     {
         return $this->globEach($path, fn ($file) => Storage::delete($file));
+    }
+
+    public function stub(string $stub, string $destination): static
+    {
+        if (! file_exists(base_path("stubs/{$stub}"))) {
+            throw new Exception("Stub {$stub} does not exist.");
+        }
+
+        $contents = file_get_contents(base_path("stubs/{$stub}"));
+
+        Storage::put($destination, $contents);
+
+        return $this;
     }
 
     public function deleteLinesContaining(string $path, string $content): static

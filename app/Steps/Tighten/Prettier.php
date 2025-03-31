@@ -21,6 +21,7 @@ class Prettier extends Step
         $this->file->create('.prettierignore', "node_modules\nvendor\nstorage\nbootstrap/cache\npublic\n");
         $this->npm->addScript('format', 'prettier --write resources/');
         $this->npm->run('format');
+        $this->git->addAndCommit('Install and run Prettier with Tailwind class sorting');
     }
 
     public function name(): string

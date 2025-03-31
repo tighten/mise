@@ -15,7 +15,7 @@ class ApiOnly extends Recipe
     {
         $this->step(InstallSanctum::class);
 
-        $this->step('ModifyApp Service Provider', function (Step $step) {
+        $this->step('Modify App Service Provider', function (Step $step) {
             $step->file->addUse('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
             $step->file->prependToMethod(
                 'app/Providers/AppServiceProvider.php',
@@ -24,28 +24,33 @@ class ApiOnly extends Recipe
             );
         });
 
-            // @todo Publish updated App/Providers/AppServiceProvider
+        $this->step('Publish middleware, requests, and routes', function (Step $step) {
+            $step->file->stub('breeze/api-only/EnsureEmailIsVerified.php', 'app/Http/Middleware/EnsureEmailIsVerified.php');
+            $step->file->stub('breeze/api-only/LoginRequest.php', 'app/Http/Requests/Auth/LoginRequest.php');
+            $step->file->stub('breeze/api-only/routes/web.php', 'routes/web.php');
+            $step->file->stub('breeze/api-only/routes/auth.php', 'routes/auth.php');
+        });
 
-        // @todo Publish app/Http/Middleware/EnsureEmailIsVerified
-        // @todo Publish app/Http/Requests/Auth/LoginRequest
-
-        // Modify Auth tests (@todo)
-        // Publish expected routes/web.php (@todo)
-        // Publish expected routes/auth.php (@todo)
-
-        $this->step('Modify Auth controllers', function (Step $step) {
+        $this->step('Modify Auth controllers and tests', function (Step $step) {
             $step->file->replaceLines(
                 'app/Http/Controllers/Auth/VerifyEmailController.php',
                 'redirect()->intended(',
                 "return redirect()->indended(config('app.frontend_url').'/dashboard?verified=1);"
             );
 
-            // @todo Publish new/updated versions of bunch of controllers
-            // Auth/AuthenticatedSessionController
-            // Auth/EmailVerificationNotificationController
-            // Auth/NewPasswordController
-            // Auth/PasswordResetLinkController
-            // Auth/RegisteredUserController
+            $step->file->stub('breeze/api-only/controllers/AuthenticatedSessionController.php', 'app/Http/Controllers/Auth/AuthenticatedSessionController.php');
+            $step->file->stub('breeze/api-only/controllers/EmailVerificationNotificationController.php', 'app/Http/Controllers/Auth/EmailVerificationNotificationController.php');
+            $step->file->stub('breeze/api-only/controllers/NewPasswordController.php', 'app/Http/Controllers/Auth/NewPasswordController.php');
+            $step->file->stub('breeze/api-only/controllers/PasswordResetLinkController.php', 'app/Http/Controllers/Auth/PasswordResetLinkController.php');
+            $step->file->stub('breeze/api-only/controllers/RegisteredUserController.php', 'app/Http/Controllers/Auth/RegisteredUserController.php');
+
+            $step->file->delete('tests/Feature/Auth/PasswordConfirmationTest.php');
+
+            $step->file->stub('breeze/api-only/tests/AuthenticationTest.php', 'tests/Feature/Auth/AuthenticationTest.php');
+            $step->file->stub('breeze/api-only/tests/EmailVerificationTest.php', 'tests/Feature/Auth/EmailVerificationTest.php');
+            $step->file->stub('breeze/api-only/tests/PasswordResetTest.php', 'tests/Feature/Auth/PasswordResetTest.php');
+            $step->file->stub('breeze/api-only/tests/RegistrationTest.php', 'tests/Feature/Auth/RegistrationTest.php');
+            $step->file->stub('breeze/api-only/tests/ExampleTest.php', 'tests/Unit/ExampleTest.php');
         });
 
         $this->step('Delete un-used frontend files', function (Step $step) {

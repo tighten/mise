@@ -158,3 +158,23 @@ test('file->replaceLines(...) with non-existent line', function () {
 
     expect(Storage::get($path))->toBe($content);
 });
+
+test('file->stub(...)', function () {
+    copy(base_path('tests/Fixtures/stub.txt'), base_path('stubs/testing.txt'));
+
+    $destination = 'destination.txt';
+    (new File)->stub('testing.txt', $destination);
+
+    expect(Storage::exists($destination))->toBeTrue()
+        ->and(trim(Storage::get($destination)))->toBe('Hello, World!');
+
+    unlink(base_path('stubs/testing.txt'));
+})->after(function () {
+    /// @todo: Figure out why this is not being called
+    unlink(base_path('stubs/testing.txt'));
+});
+
+test('file->stub(...) throws exception for non-existent stub', function () {
+    expect(fn () => (new File)->stub('non-existent', 'destination.txt'))
+        ->toThrow(Exception::class);
+});
