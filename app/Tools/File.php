@@ -134,10 +134,9 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: Consider `addImport`
-    // @todo: Test it
-    // @todo: Can we just add it, and then rely on code tooling to re-sort? We don't currently do that, but it could make some coding easier, both this and indentation and other things.
-    public function addUse(string $path, string $class): static
+    // @todo: If we're going to do it like this, we probably need to be able to run some form of sorter after. It doesn't sort imports.
+    // @todo: This is not a good enough solution long term (e.g. doesn't handle traits, interfaces, etc.)
+    public function addImport(string $path, string $class): static
     {
         $useString = "use $class;\n";
 
@@ -145,17 +144,31 @@ class File extends ConsoleCommand
             return $this;
         }
 
-        // Otherwise, add it just above the class definition, and then ... hope something else sorts them for us after? What's the story there?
-        $lines = collect(explode("\n", $contents))->map(function ($line) use ($useString) {
-            // @todo: We need a better tester than this. Just testing for short term.
-            if (str_contains($line, 'class')) {
-                return "$useString\n\n$line";
-            }
+        $contents = explode("\n", $contents);
 
-            return $line;
-        });
+        // Find the first line that starts with `class`
+        $classIndex = array_search(
+            'class',
+            array_map(fn ($line) => str_starts_with($line, 'class') ? substr($line, 0, 5) : null, $contents)
+        );
 
-        Storage::put($path, $lines->join("\n"));
+        if ($classIndex === false) {
+            throw new Exception("Class keyword not found in {$path}");
+        }
+
+        // Insert the use statement just before the class definition
+        $newContents = array_merge(
+            array_slice($contents, 0, $classIndex),
+            [$useString],
+            array_slice($contents, $classIndex)
+        );
+
+        if (! $newContents[$classIndex - 1] && str_starts_with($newContents[$classIndex - 2], 'use')) {
+            // Remove line above this import entirely... but only if this is the only import
+            unset($newContents[$classIndex - 1]);
+        }
+
+        Storage::put($path, implode("\n", $newContents));
 
         return $this;
     }
