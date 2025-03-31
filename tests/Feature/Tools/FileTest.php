@@ -138,3 +138,23 @@ test('file->addToJson(...) updates existing key', function () {
         'existingKey' => 'newValue',
     ]);
 });
+
+test('file->replaceLines(...)', function () {
+    $path = 'test.txt';
+    $content = "Line 1\nLine 2\nLine 3";
+    Storage::put($path, $content);
+
+    (new File)->replaceLines($path, 'Line 2', "Replaced Line 1\nReplaced Line 2");
+
+    expect(Storage::get($path))->toBe("Line 1\nReplaced Line 1\nReplaced Line 2\nLine 3");
+});
+
+test('file->replaceLines(...) with non-existent line', function () {
+    $path = 'test.txt';
+    $content = "Line 1\nLine 2\nLine 3\n";
+    Storage::put($path, $content);
+
+    (new File)->replaceLines($path, 'Non-existent Line', 'Replacement');
+
+    expect(Storage::get($path))->toBe($content);
+});
