@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Steps;
+namespace App\Steps\Files;
+
+use App\Steps\Step;
 
 class PublishStubs extends Step
 {

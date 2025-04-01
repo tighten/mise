@@ -3,8 +3,10 @@
 namespace App\Recipes\Breeze;
 
 use App\Recipes\Recipe;
+use App\Steps\Files\CreateFile;
+use App\Steps\Files\DeleteFiles;
 use App\Steps\Laravel\InstallSanctum;
-use App\Steps\PublishStubs;
+use App\Steps\Files\PublishStubs;
 use App\Steps\Step;
 
 class ApiOnly extends Recipe
@@ -16,6 +18,12 @@ class ApiOnly extends Recipe
     {
         $this->step(InstallSanctum::class);
         $this->step(PublishStubs::class, 'breeze/api-only');
+        $this->step(DeleteFiles::class, [
+            'vite.config.js',
+            'package.json',
+            'resources/**/*',
+        ]);
+        $this->step(CreateFile::class, 'resources/views/.gitkeep');
 
         $this->step('Modify App Service Provider', function (Step $step) {
             $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
@@ -34,16 +42,6 @@ class ApiOnly extends Recipe
             );
 
             $step->file->delete('tests/Feature/Auth/PasswordConfirmationTest.php');
-        });
-
-        $this->step('Delete un-used frontend files', function (Step $step) {
-            $step->file->delete([
-                'vite.config.js',
-                'package.json',
-                'resources/**/*',
-            ]);
-
-            $step->file->create('resources/views/.gitkeep');
         });
     }
 
