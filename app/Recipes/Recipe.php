@@ -16,10 +16,10 @@ abstract class Recipe
 
     public string $key;
 
-    public function step(string $stepName, array|callable $params = []): void
+    public function step(string $stepName, ...$params): void
     {
-        if (is_callable($params)) {
-            $this->callableStep($stepName, $params);
+        if (isset ($params[0]) && is_callable($params[0])) {
+            $this->callableStep($stepName, $params[0]);
             return;
         }
 

@@ -190,8 +190,8 @@ test('file->stub(...)', function () {
 
     unlink(base_path('stubs/testing.txt'));
 })->after(function () {
-    /// @todo: Figure out why this is not being called
-    //         ... Tony and Mateus discovered, the test name is normalized to run it, but not to check for after().
+    /// @todo: Figure out why this is not being called....
+    //         ... Tony and Mateus discovered: the test name is normalized to run it, but not to check for after().
     //         ... so this requires a PR to fix Pest to work with test names containing strange characters.
     unlink(base_path('stubs/testing.txt'));
 });
