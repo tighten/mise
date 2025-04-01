@@ -7,6 +7,7 @@ use App\Steps\Files\CreateFile;
 use App\Steps\Files\DeleteFiles;
 use App\Steps\Laravel\InstallSanctum;
 use App\Steps\Files\PublishStubs;
+use App\Steps\Git\AddAndCommit;
 use App\Steps\Step;
 
 class ApiOnly extends Recipe
@@ -43,6 +44,8 @@ class ApiOnly extends Recipe
 
             $step->file->delete('tests/Feature/Auth/PasswordConfirmationTest.php');
         });
+
+        $this->step(AddAndCommit::class, 'Configure for API-only');
     }
 
     public function description(): string
