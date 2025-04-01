@@ -50,10 +50,13 @@ class ApiOnly extends Recipe
             $step->file->appendAfterLine('.env.example', 'APP_URL=', 'FRONTEND_URL=http://localhost:3000');
         });
 
-        // @todo: Modify bootstrap.php to add the api routes and the middleware
-        // Do we use Breeze as inspiration? Or just publish the file from a stub?
-        // - https://github.com/laravel/breeze/blob/976ab1e2f68b90eee5a787445ff94033d919be2f/src/Console/InstallCommand.php#L116
-        // - https://github.com/laravel/breeze/blob/976ab1e2f68b90eee5a787445ff94033d919be2f/src/Console/InstallCommand.php#L145
+        $this->step('Modify bootstrap.php', function (Step $step) {
+            $step->file->appendAfterLine(
+                'bootstrap/app.php',
+                '->withMiddleware(',
+                "\$middleware->api(prepend: [\n    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,\n]);\n\n\$middleware->alias([\n    'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,\n]);"
+            );
+        });
 
         $this->step('Modify App Service Provider', function (Step $step) {
             $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');

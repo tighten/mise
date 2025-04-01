@@ -102,6 +102,7 @@ class File extends ConsoleCommand
     }
 
     // @todo: Add limit, so they could say "only the first occurrence"?
+    // @todo: Match indentation
     public function appendAfterLine(string $path, string $search, string $content): static
     {
         $lines = explode("\n", Storage::get($path));
