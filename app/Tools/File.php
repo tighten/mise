@@ -57,36 +57,26 @@ class File extends ConsoleCommand
     public function stub(string $stub, string $destination): static
     {
         $stubPath = base_path("stubs/{$stub}");
-        if (is_dir($stubPath)) {
-            dump("skipping directory $stub temporarily");
-            // @todo: Handle directory by ensuring the destination directory exists
-            return $this;
-        }
 
         if (! file_exists($stubPath)) {
             throw new Exception("Stub {$stub} does not exist.");
         }
 
-        dump("Write to {$destination}");
         $contents = file_get_contents(base_path("stubs/{$stub}"));
 
-        // Storage::put($destination, $contents);
+        Storage::put($destination, $contents);
 
         return $this;
     }
 
-    // @todo: Manually test that this works the way we're expecting.
     public function stubAll(string $path): static
     {
-        // @todo: Do we need to cave and do Storage::allFiles, with a custom
-        // driver that points to Mise?
-        dd('This does not get all our files in subdirectories');
-        $files = glob(base_path("stubs/{$path}/*/*"));
+        $files = Storage::disk('mise')->allFiles("stubs/{$path}");
 
         foreach ($files as $file) {
             $this->stub(
-                str_replace(base_path('stubs/'), '', $file),
-                str_replace(base_path('stubs/') . $path . '/', '', $file)
+                str_replace('stubs/', '', $file),
+                str_replace('stubs/' . $path . '/', '', $file)
             );
         }
 

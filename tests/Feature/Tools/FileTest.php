@@ -167,7 +167,7 @@ test('file->replaceLines(...) with limit', function () {
     (new File)->replaceLines($path, 'Line', "Replaced Line", 1);
 
     expect(Storage::get($path))->toBe("Replaced Line\nLine 2\nLine 3");
-})->only();
+});
 
 test('file->replaceLines(...) with non-existent line', function () {
     $path = 'test.txt';
