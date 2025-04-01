@@ -18,6 +18,7 @@ class ApiOnly extends Recipe
     public function __invoke(): void
     {
         $this->step(InstallSanctum::class);
+        // @todo: Do we need to prompt pest vs. phpunit for these tests?
         $this->step(PublishStubs::class, 'breeze/api-only');
         $this->step(DeleteFiles::class, [
             'vite.config.js',

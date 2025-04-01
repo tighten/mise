@@ -2,28 +2,31 @@
 
 namespace App\Recipes;
 
+use App\Steps\Database\Migrate;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
+
 class LaravelBreeze extends Recipe
 {
     public string $key = 'laravel-breeze';
 
     public function __invoke(): void
     {
-        $this->recipe('laravel-breeze/api-only');
-        // Which breeze stack would you like to install?
-        // 1. Blade with Alpine
-        // 2. Livewire (Volt Class API) with Alpine
-        // 3. Livewire (Volt Functional API) with Alpine
-        // 4. React with Inertia
-        // 5. Vue with Inertia
-        // 6. API only
+        $stack = select('Which breeze stack would you like to install?', [
+            'blade' => 'Blade with Alpine (not functional yet)',
+            'livewire' => 'Livewire (Volt Class API) with Alpine (not functional yet)',
+            'livewire-functional' => 'Livewire (Volt Functional API) with Alpine (not functional yet)',
+            'react' => 'React with Inertia (not functional yet)',
+            'vue' => 'Vue with Inertia (not functional yet)',
+            'api-only' => 'API only',
+        ]);
 
-        // Which testing framework would you like to install?
-        // 1. PHPUnit
-        // 2. Pest
+        $this->recipe('laravel-breeze/' . $stack);
 
-        // Would you like to run database migrations?
-        // 1. Yes
-        // 2. No
+        if (confirm('Would you like to run database migrations?')) {
+            $this->step(Migrate::class);
+        }
     }
 
     public function description(): string
