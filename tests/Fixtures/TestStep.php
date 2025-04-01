@@ -6,7 +6,7 @@ use App\Steps\Step;
 
 class TestStep extends Step
 {
-    public function __invoke($message = 'Hello World'): void
+    public function __invoke(?string $message = 'Hello World'): void
     {
         $this->console->exec("echo '{$message}'");
     }
