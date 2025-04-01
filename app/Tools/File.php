@@ -82,13 +82,19 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: Add limit
-    public function replaceLines(string $path, string $search, string $replace): static
+    public function replaceLines(string $path, string $search, string $replace, ?int $limit = null): static
     {
+        $limitCount = 0;
         $lines = explode("\n", Storage::get($path));
-        $lines = array_map(function ($line) use ($search, $replace) {
-            // If it matches, replace it; otherwise, return the line unchanged
+        $lines = array_map(function ($line) use ($search, $replace, &$limitCount, $limit) {
+            // If it matches, replace it (as long as we haven't hit the limit); otherwise, return the line unchanged
             if (str_contains($line, $search)) {
+                if (! is_null($limit) && $limitCount >= $limit) {
+                    return $line;
+                }
+
+                $limitCount++;
+
                 $indent = strlen($line) - strlen(ltrim($line));
                 return $this->indentAllLines($replace, $indent);
             }
@@ -101,12 +107,18 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: Add limit, so they could say "only the first occurrence"?
-    public function appendAfterLine(string $path, string $search, string $content): static
+    public function appendAfterLine(string $path, string $search, string $content, ?int $limit = null): static
     {
+        $limitCount = 0;
         $lines = explode("\n", Storage::get($path));
-        $lines = array_map(function ($line) use ($search, $content) {
+        $lines = array_map(function ($line) use ($search, $content, &$limitCount, $limit) {
             if (str_contains($line, $search)) {
+                if (! is_null($limit) && $limitCount >= $limit) {
+                    return $line;
+                }
+
+                $limitCount++;
+
                 $indent = strlen($line) - strlen(ltrim($line));
                 return $line . "\n" . $this->indentAllLines($content, $indent);
             }

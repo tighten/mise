@@ -159,6 +159,16 @@ test('file->replaceLines(...) honors indentation', function () {
     expect(Storage::get($path))->toBe("Line 1\n    Replaced Line 1\n    Replaced Line 2\nLine 3");
 });
 
+test('file->replaceLines(...) with limit', function () {
+    $path = 'test.txt';
+    $content = "Line 1\nLine 2\nLine 3";
+    Storage::put($path, $content);
+
+    (new File)->replaceLines($path, 'Line', "Replaced Line", 1);
+
+    expect(Storage::get($path))->toBe("Replaced Line\nLine 2\nLine 3");
+})->only();
+
 test('file->replaceLines(...) with non-existent line', function () {
     $path = 'test.txt';
     $content = "Line 1\nLine 2\nLine 3\n";
@@ -235,6 +245,15 @@ test('file->appendAfterLine(...)', function () {
     (new File)->appendAfterLine($path, 'Line 2', 'Appended content');
 
     expect(Storage::get($path))->toBe("Line 1\nLine 2\nAppended content\nLine 3");
+});
+
+test('file->appendAfterLine(...) with limit', function () {
+    $path = 'test.txt';
+    Storage::put($path, "Line 1\nLine 2\nAnother Line 2\nLine 3");
+
+    (new File)->appendAfterLine($path, 'Line 2', 'Appended content', 1);
+
+    expect(Storage::get($path))->toBe("Line 1\nLine 2\nAppended content\nAnother Line 2\nLine 3");
 });
 
 test('file->appendAfterLine(...) with multiple matches', function () {
