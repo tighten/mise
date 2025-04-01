@@ -26,15 +26,7 @@ class ApiOnly extends Recipe
             'phpunit' => 'PHPUnit',
         ]);
 
-        switch($testingFramework) {
-            case 'pest':
-                $this->step(PublishStubs::class, 'breeze/api-only/pest');
-                break;
-            case 'phpunit':
-                $this->step(PublishStubs::class, 'breeze/api-only/phpunit');
-                break;
-        }
-
+        $this->step(PublishStubs::class, 'breeze/api-only/' . $testingFramework);
         $this->step(InstallSanctum::class);
         $this->step(PublishStubs::class, 'breeze/api-only/shared');
         $this->step(DeleteFiles::class, [

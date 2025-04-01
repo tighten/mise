@@ -222,5 +222,4 @@ class File extends ConsoleCommand
 
         return $this;
     }
-
 }
