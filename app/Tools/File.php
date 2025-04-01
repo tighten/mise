@@ -83,14 +83,14 @@ class File extends ConsoleCommand
     }
 
     // @todo: Add limit
-    // @todo: Match indentation
     public function replaceLines(string $path, string $search, string $replace): static
     {
         $lines = explode("\n", Storage::get($path));
         $lines = array_map(function ($line) use ($search, $replace) {
             // If it matches, replace it; otherwise, return the line unchanged
             if (str_contains($line, $search)) {
-                return $replace;
+                $indent = strlen($line) - strlen(ltrim($line));
+                return $this->indentAllLines($replace, $indent);
             }
 
             return $line;
@@ -102,13 +102,13 @@ class File extends ConsoleCommand
     }
 
     // @todo: Add limit, so they could say "only the first occurrence"?
-    // @todo: Match indentation
     public function appendAfterLine(string $path, string $search, string $content): static
     {
         $lines = explode("\n", Storage::get($path));
         $lines = array_map(function ($line) use ($search, $content) {
             if (str_contains($line, $search)) {
-                return $line . "\n" . $content;
+                $indent = strlen($line) - strlen(ltrim($line));
+                return $line . "\n" . $this->indentAllLines($content, $indent);
             }
 
             return $line;
@@ -221,5 +221,14 @@ class File extends ConsoleCommand
         }
 
         return $this;
+    }
+
+    protected function indentAllLines(array|string $content, $indentCount): array|string
+    {
+        $return = is_array($content) ? 'array' : 'string';
+        $content = is_array($content) ?: explode("\n", $content);
+        $content = array_map(fn ($line) => str_repeat(' ', $indentCount) . $line, $content);
+
+        return $return === 'array' ? $content : implode("\n", $content);
     }
 }

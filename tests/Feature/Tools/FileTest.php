@@ -149,6 +149,16 @@ test('file->replaceLines(...)', function () {
     expect(Storage::get($path))->toBe("Line 1\nReplaced Line 1\nReplaced Line 2\nLine 3");
 });
 
+test('file->replaceLines(...) honors indentation', function () {
+    $path = 'test.txt';
+    $content = "Line 1\n    Line 2\nLine 3";
+    Storage::put($path, $content);
+
+    (new File)->replaceLines($path, 'Line 2', "Replaced Line 1\nReplaced Line 2");
+
+    expect(Storage::get($path))->toBe("Line 1\n    Replaced Line 1\n    Replaced Line 2\nLine 3");
+});
+
 test('file->replaceLines(...) with non-existent line', function () {
     $path = 'test.txt';
     $content = "Line 1\nLine 2\nLine 3\n";
@@ -253,4 +263,13 @@ test('file->appendAfterLine(...) with empty file', function () {
     (new File)->appendAfterLine($path, 'Line', 'Appended content');
 
     expect(Storage::get($path))->toBe('');
+});
+
+test('file->appendAfterLine(...) honors indentation', function () {
+    $path = 'test.txt';
+    Storage::put($path, "Line 1\n    Line 2\n");
+
+    (new File)->appendAfterLine($path, 'Line 2', 'Appended content');
+
+    expect(Storage::get($path))->toBe("Line 1\n    Line 2\n    Appended content\n");
 });
