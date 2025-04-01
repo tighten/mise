@@ -175,8 +175,8 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: If we're going to do it like this, we probably need to be able to run some form of sorter after. It doesn't sort imports.
-    // @todo: This is not a good enough solution long term (e.g. doesn't handle traits, interfaces, etc.)
+    // @todo: Sort imports afterward
+    // @todo: Improve this to handle traits, interfaces, etc.
     public function addImport(string $path, string $class): static
     {
         $useString = "use $class;\n";
