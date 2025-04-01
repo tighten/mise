@@ -2,9 +2,6 @@
 
 namespace App\Recipes;
 
-use App\Steps\Database\Migrate;
-
-use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
 class LaravelBreeze extends Recipe
@@ -23,10 +20,6 @@ class LaravelBreeze extends Recipe
         ]);
 
         $this->recipe('laravel-breeze/' . $stack);
-
-        if (confirm('Would you like to run database migrations?')) {
-            $this->step(Migrate::class);
-        }
     }
 
     public function description(): string

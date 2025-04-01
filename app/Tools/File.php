@@ -101,6 +101,23 @@ class File extends ConsoleCommand
         return $this;
     }
 
+    // @todo: Add limit, so they could say "only the first occurrence"?
+    public function appendAfterLine(string $path, string $search, string $content): static
+    {
+        $lines = explode("\n", Storage::get($path));
+        $lines = array_map(function ($line) use ($search, $content) {
+            if (str_contains($line, $search)) {
+                return $line . "\n" . $content;
+            }
+
+            return $line;
+        }, $lines);
+
+        Storage::put($path, implode("\n", $lines));
+
+        return $this;
+    }
+
     // This could likely be refactored to use Reflection, but it seems unlikely it'll be nearly as elegant;
     // because we're only operating on fresh framework code, I hope we can assume the method signature is well-formed
     public function prependToMethod(string $path, string $method, string $content): static

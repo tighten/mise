@@ -3,12 +3,16 @@
 namespace App\Recipes\Breeze;
 
 use App\Recipes\Recipe;
+use App\Steps\Database\Migrate;
 use App\Steps\Files\CreateFile;
 use App\Steps\Files\DeleteFiles;
 use App\Steps\Laravel\InstallSanctum;
 use App\Steps\Files\PublishStubs;
 use App\Steps\Git\AddAndCommit;
 use App\Steps\Step;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
 
 class ApiOnly extends Recipe
 {
@@ -17,15 +21,39 @@ class ApiOnly extends Recipe
     // @todo: When done with this, make sure it all is still relevant in Laravel 12.
     public function __invoke(): void
     {
+        $testingFramework = select('Which testing framework do you want to use?', [
+            'pest' => 'Pest',
+            'phpunit' => 'PHPUnit',
+        ]);
+
+        switch($testingFramework) {
+            case 'pest':
+                $this->step(PublishStubs::class, 'breeze/api-only/pest');
+                break;
+            case 'phpunit':
+                $this->step(PublishStubs::class, 'breeze/api-only/phpunit');
+                break;
+        }
+
         $this->step(InstallSanctum::class);
-        // @todo: Do we need to prompt pest vs. phpunit for these tests?
-        $this->step(PublishStubs::class, 'breeze/api-only');
+        $this->step(PublishStubs::class, 'breeze/api-only/shared');
         $this->step(DeleteFiles::class, [
             'vite.config.js',
             'package.json',
             'resources/**/*',
+            'package-lock.json',
+            'node_modules/**/*',
         ]);
         $this->step(CreateFile::class, 'resources/views/.gitkeep');
+        $this->step('Update .env', function (Step $step) {
+            $step->file->appendAfterLine('.env', 'APP_URL=', 'FRONTEND_URL=http://localhost:3000');
+            $step->file->appendAfterLine('.env.example', 'APP_URL=', 'FRONTEND_URL=http://localhost:3000');
+        });
+
+        // @todo: Modify bootstrap.php to add the api routes and the middleware
+        // Do we use Breeze as inspiration? Or just publish the file from a stub?
+        // - https://github.com/laravel/breeze/blob/976ab1e2f68b90eee5a787445ff94033d919be2f/src/Console/InstallCommand.php#L116
+        // - https://github.com/laravel/breeze/blob/976ab1e2f68b90eee5a787445ff94033d919be2f/src/Console/InstallCommand.php#L145
 
         $this->step('Modify App Service Provider', function (Step $step) {
             $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
@@ -47,6 +75,10 @@ class ApiOnly extends Recipe
         });
 
         $this->step(AddAndCommit::class, 'Configure for API-only');
+
+        if (confirm('Would you like to run database migrations?')) {
+            $this->step(Migrate::class);
+        }
     }
 
     public function description(): string

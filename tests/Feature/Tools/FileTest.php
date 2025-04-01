@@ -217,3 +217,40 @@ test('file->addImport(...) throws exception when no class is found', function ()
     expect(fn () => (new File)->addImport($path, 'App\Models\User'))
         ->toThrow(Exception::class, "Class keyword not found in {$path}");
 });
+
+test('file->appendAfterLine(...)', function () {
+    $path = 'test.txt';
+    Storage::put($path, "Line 1\nLine 2\nLine 3");
+
+    (new File)->appendAfterLine($path, 'Line 2', 'Appended content');
+
+    expect(Storage::get($path))->toBe("Line 1\nLine 2\nAppended content\nLine 3");
+});
+
+test('file->appendAfterLine(...) with multiple matches', function () {
+    $path = 'test.txt';
+    Storage::put($path, "Line 1\nLine 2\nLine 2\nLine 3");
+
+    (new File)->appendAfterLine($path, 'Line 2', 'Appended content');
+
+    expect(Storage::get($path))->toBe("Line 1\nLine 2\nAppended content\nLine 2\nAppended content\nLine 3");
+});
+
+test('file->appendAfterLine(...) with no matches', function () {
+    $path = 'test.txt';
+    $content = "Line 1\nLine 2\nLine 3";
+    Storage::put($path, $content);
+
+    (new File)->appendAfterLine($path, 'Non-existent', 'Appended content');
+
+    expect(Storage::get($path))->toBe($content);
+});
+
+test('file->appendAfterLine(...) with empty file', function () {
+    $path = 'test.txt';
+    Storage::put($path, '');
+
+    (new File)->appendAfterLine($path, 'Line', 'Appended content');
+
+    expect(Storage::get($path))->toBe('');
+});
