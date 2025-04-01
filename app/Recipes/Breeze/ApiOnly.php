@@ -26,8 +26,9 @@ class ApiOnly extends Recipe
             'phpunit' => 'PHPUnit',
         ]);
 
-        $this->step(PublishStubs::class, 'breeze/api-only/' . $testingFramework);
         $this->step(InstallSanctum::class);
+
+        $this->step(PublishStubs::class, 'breeze/api-only/' . $testingFramework);
         $this->step(PublishStubs::class, 'breeze/api-only/shared');
         $this->step(DeleteFiles::class, [
             'vite.config.js',
@@ -46,7 +47,7 @@ class ApiOnly extends Recipe
             $step->file->appendAfterLine(
                 'bootstrap/app.php',
                 '->withMiddleware(',
-                "\$middleware->api(prepend: [\n    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,\n]);\n\n\$middleware->alias([\n    'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,\n]);"
+                "    \$middleware->api(prepend: [\n        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,\n    ]);\n\n    \$middleware->alias([\n        'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,\n    ]);"
             );
         });
 
@@ -55,7 +56,7 @@ class ApiOnly extends Recipe
             $step->file->prependToMethod(
                 'app/Providers/AppServiceProvider.php',
                 'boot',
-                "ResetPassword::createUrlUsing(function (object \$notifiable, string \$token) {\n .   return config('app.frontend_url').\"/password-reset/\$token?email=\{\$notifiable->getEmailForPasswordReset()}\";\n});"
+                "ResetPassword::createUrlUsing(function (object \$notifiable, string \$token) {\n    return config('app.frontend_url').\"/password-reset/\$token?email=\{\$notifiable->getEmailForPasswordReset()}\";\n});"
             );
         });
 
@@ -63,7 +64,7 @@ class ApiOnly extends Recipe
             $step->file->replaceLines(
                 'app/Http/Controllers/Auth/VerifyEmailController.php',
                 'redirect()->intended(',
-                "return redirect()->indended(config('app.frontend_url').'/dashboard?verified=1);"
+                "return redirect()->intended(config('app.frontend_url').'/dashboard?verified=1);"
             );
 
             $step->file->delete('tests/Feature/Auth/PasswordConfirmationTest.php');
