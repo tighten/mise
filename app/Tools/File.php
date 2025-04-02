@@ -2,6 +2,7 @@
 
 namespace App\Tools;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class File extends ConsoleCommand
@@ -41,9 +42,43 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    public function delete(string $path): static
+    public function delete(array|string $path): static
     {
-        Storage::delete($path);
+        return $this->globEach($path, fn ($file) => Storage::delete($file));
+    }
+
+    /**
+     * Copy a stub file into the target codebase.
+     *
+     * @param string $stub The relative source path (underneath the `stubs` directory)
+     * @param string $destination The relative destination path (underneath the target codebase base_path)
+     * @return static
+     */
+    public function stub(string $stub, string $destination): static
+    {
+        $stubPath = base_path("stubs/{$stub}");
+
+        if (! file_exists($stubPath)) {
+            throw new Exception("Stub {$stub} does not exist.");
+        }
+
+        $contents = file_get_contents(base_path("stubs/{$stub}"));
+
+        Storage::put($destination, $contents);
+
+        return $this;
+    }
+
+    public function stubAll(string $path): static
+    {
+        $files = Storage::disk('mise')->allFiles("stubs/{$path}");
+
+        foreach ($files as $file) {
+            $this->stub(
+                str_replace('stubs/', '', $file),
+                str_replace('stubs/' . $path . '/', '', $file)
+            );
+        }
 
         return $this;
     }
@@ -54,6 +89,55 @@ class File extends ConsoleCommand
         $lines = array_filter($lines, function ($line) use ($content) {
             return strpos($line, $content) === false;
         });
+        Storage::put($path, implode("\n", $lines));
+
+        return $this;
+    }
+
+    public function replaceLines(string $path, string $search, string $replace, ?int $limit = null): static
+    {
+        $limitCount = 0;
+        $lines = explode("\n", Storage::get($path));
+        $lines = array_map(function ($line) use ($search, $replace, &$limitCount, $limit) {
+            // If it matches, replace it (as long as we haven't hit the limit); otherwise, return the line unchanged
+            if (str_contains($line, $search)) {
+                if (! is_null($limit) && $limitCount >= $limit) {
+                    return $line;
+                }
+
+                $limitCount++;
+
+                $indent = strlen($line) - strlen(ltrim($line));
+                return $this->indentAllLines($replace, $indent);
+            }
+
+            return $line;
+        }, $lines);
+
+        Storage::put($path, implode("\n", $lines));
+
+        return $this;
+    }
+
+    public function appendAfterLine(string $path, string $search, string $content, ?int $limit = null): static
+    {
+        $limitCount = 0;
+        $lines = explode("\n", Storage::get($path));
+        $lines = array_map(function ($line) use ($search, $content, &$limitCount, $limit) {
+            if (str_contains($line, $search)) {
+                if (! is_null($limit) && $limitCount >= $limit) {
+                    return $line;
+                }
+
+                $limitCount++;
+
+                $indent = strlen($line) - strlen(ltrim($line));
+                return $line . "\n" . $this->indentAllLines($content, $indent);
+            }
+
+            return $line;
+        }, $lines);
+
         Storage::put($path, implode("\n", $lines));
 
         return $this;
@@ -101,5 +185,74 @@ class File extends ConsoleCommand
         Storage::put($path, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         return $this;
+    }
+
+    // @todo: Sort imports afterward
+    // @todo: Improve this to handle traits, interfaces, etc.
+    public function addImport(string $path, string $class): static
+    {
+        $useString = "use $class;\n";
+
+        if (str_contains($contents = Storage::get($path), $useString)) {
+            return $this;
+        }
+
+        $contents = explode("\n", $contents);
+
+        // Find the first line that starts with `class`
+        $classIndex = array_search(
+            'class',
+            array_map(fn ($line) => str_starts_with($line, 'class') ? substr($line, 0, 5) : null, $contents)
+        );
+
+        if ($classIndex === false) {
+            throw new Exception("Class keyword not found in {$path}");
+        }
+
+        // Insert the use statement just before the class definition
+        $newContents = array_merge(
+            array_slice($contents, 0, $classIndex),
+            [$useString],
+            array_slice($contents, $classIndex)
+        );
+
+        if (! $newContents[$classIndex - 1] && str_starts_with($newContents[$classIndex - 2], 'use')) {
+            // Remove line above this import entirely... but only if this is the only import
+            unset($newContents[$classIndex - 1]);
+        }
+
+        Storage::put($path, implode("\n", $newContents));
+
+        return $this;
+    }
+
+    /**
+     * Allow passing globbing patterns or arrays of globbing patterns.
+     */
+    protected function globEach(array|string $path, callable $callback): static
+    {
+        $path = is_array($path) ? $path : [$path];
+
+        foreach ($path as $eachPath) {
+            // Checking for glob-targeted strings; we may have to expand this to support more complex glob patterns
+            if (str_contains($eachPath, '*')) {
+                foreach (glob($eachPath) as $file) {
+                    $callback($file);
+                }
+            } else {
+                $callback($eachPath);
+            }
+        }
+
+        return $this;
+    }
+
+    protected function indentAllLines(array|string $content, $indentCount): array|string
+    {
+        $return = is_array($content) ? 'array' : 'string';
+        $content = is_array($content) ?: explode("\n", $content);
+        $content = array_map(fn ($line) => str_repeat(' ', $indentCount) . $line, $content);
+
+        return $return === 'array' ? $content : implode("\n", $content);
     }
 }

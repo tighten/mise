@@ -120,7 +120,7 @@ namespace App\Recipes;
 
 class EchoDate extends Recipe
 {
-    public string $slug = 'echo-date';
+    public string $key = 'echo-date';
 
     public function __invoke(): void
     {

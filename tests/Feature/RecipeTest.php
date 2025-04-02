@@ -19,7 +19,7 @@ it('resolves step classes', function () {
     );
 });
 
-it('it runs steps', function () {
+it('runs steps', function () {
     Process::fake();
     Prompt::fake();
 

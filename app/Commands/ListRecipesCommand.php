@@ -28,7 +28,7 @@ class ListRecipesCommand extends Command
 
     private function recipes(): string
     {
-        $recipes = (new Recipes)->all();
+        $recipes = (new Recipes)->allKeysAndClasses();
         $padding = $recipes->keys()->max(fn ($recipe) => strlen($recipe) + 4);
 
         return $recipes->reduce(
