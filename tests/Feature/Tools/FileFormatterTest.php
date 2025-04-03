@@ -49,4 +49,16 @@ describe('PHP File Formatting', function () {
 
         expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
     });
+
+    it('accepts php-cs-fixer rules', function () {
+        $format = new FileFormatter();
+
+        Storage::put('MultipleIssues.php', File::get('tests/Fixtures/FileFormatter/PHP/MultipleIssues.php.fixture'));
+
+        $format->file('MultipleIssues.php')
+               ->rules(['ordered_imports', 'array_syntax'])
+               ->fix();
+
+        expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
+    });
 });

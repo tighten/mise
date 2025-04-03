@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FileFormatter extends ConsoleCommand
 {
-    private array $rules;
+    private array $rules = [];
 
     private string $file;
 
@@ -21,15 +21,23 @@ class FileFormatter extends ConsoleCommand
 
     public function importOrder(): FileFormatter
     {
-        $this->rules[] = 'ordered_imports';
+        $this->rules('ordered_imports');
 
         return $this;
     }
 
     public function arraySyntax(): FileFormatter
     {
-        $this->rules[] = 'array_syntax';
+        $this->rules('array_syntax');
 
+        return $this;
+    }
+
+    public function rules(string|array $rules): FileFormatter
+    {
+        is_string($rules)
+            ? $this->rules[] = $rules
+            : $this->rules =  array_merge($rules, $this->rules);
         return $this;
     }
 
