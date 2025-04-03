@@ -14,7 +14,7 @@ beforeEach(function () {
 
 describe('PHP File Formatting', function () {
     it('it sorts imports', function () {
-        $format = new FileFormatter();
+        $format = new FileFormatter;
 
         Storage::put('UnOrganizedImports.php', File::get(base_path('tests/Fixtures/FileFormatter/PHP/UnOrganizedImports.php.fixture')));
 
@@ -26,7 +26,7 @@ describe('PHP File Formatting', function () {
     });
 
     it('it fixes array syntax', function () {
-        $format = new FileFormatter();
+        $format = new FileFormatter;
 
         Storage::put('ArrayFunctionSyntax.php', File::get('tests/Fixtures/FileFormatter/PHP/ArrayFunctionSyntax.php.fixture'));
 
@@ -38,7 +38,7 @@ describe('PHP File Formatting', function () {
     });
 
     it('fixes multiple issues', function () {
-        $format = new FileFormatter();
+        $format = new FileFormatter;
 
         Storage::put('MultipleIssues.php', File::get('tests/Fixtures/FileFormatter/PHP/MultipleIssues.php.fixture'));
 
@@ -50,15 +50,27 @@ describe('PHP File Formatting', function () {
         expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
     });
 
-    it('accepts php-cs-fixer rules', function () {
-        $format = new FileFormatter();
+    it('accepts an array of php-cs-fixer rules', function () {
+        $format = new FileFormatter;
 
         Storage::put('MultipleIssues.php', File::get('tests/Fixtures/FileFormatter/PHP/MultipleIssues.php.fixture'));
 
         $format->file('MultipleIssues.php')
-               ->rules(['ordered_imports', 'array_syntax'])
-               ->fix();
+            ->rules(['ordered_imports', 'array_syntax'])
+            ->fix();
 
         expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
+    });
+
+    it('accepts a string name of a php-cs-fixer rule', function () {
+        $format = new FileFormatter;
+
+        Storage::put('UnOrganizedImports.php', File::get(base_path('tests/Fixtures/FileFormatter/PHP/UnOrganizedImports.php.fixture')));
+
+        $format->file('UnOrganizedImports.php')
+            ->rules('ordered_imports')
+            ->fix();
+
+        expect(Storage::get('UnOrganizedImports.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/OrganisedImports.php.fixture')));
     });
 });
