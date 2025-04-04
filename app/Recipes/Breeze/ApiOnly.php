@@ -58,7 +58,7 @@ class ApiOnly extends Recipe
                 'boot',
                 "ResetPassword::createUrlUsing(function (object \$notifiable, string \$token) {\n    return config('app.frontend_url').\"/password-reset/\$token?email=\{\$notifiable->getEmailForPasswordReset()}\";\n});"
             );
-            $step->formatter->fix('app/Providers/AppServiceProvider.php', 'ordered_imports');
+            $step->formatter->fix('app/Providers/AppServiceProvider.php', ['single_import_per_statement', 'ordered_imports', 'single_line_after_imports']);
         });
 
         $this->step('Modify existing Auth controllers', function (Step $step) {
