@@ -2,13 +2,16 @@
 
 namespace App\Commands;
 
-use Illuminate\Support\Facades\Http;
+use App\Services\MiseService;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use LaravelZero\Framework\Commands\Command;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
-use function Laravel\Prompts\select;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\note;
 
 class PullCommand extends Command
 {
@@ -24,52 +27,47 @@ class PullCommand extends Command
             info('Dry run enabled');
             Process::fake();
         }
-        // @todo: Pull more than one recipe at a time
-        $recipe = $this->pullRecipe();
-        $this->intallRecipe($recipe);
 
-        // @todo: Should we prompt the user to continue
-        // if (! confirm('Do you want to run the recipe now?', true)) {
-        //     info('Recipe pulled, but not run.');
-        // }
+        $remoteRecipes = $this->selectRemoteRecipes();
+
+        foreach ($remoteRecipes as $recipe) {
+            $this->install($recipe);
+        }
+
+        if (confirm('Do you want to run the recipe now?')) {
+            $this->call('apply', [
+                'recipe' => $remoteRecipes,
+                '--no-process' => $this->option('no-process'),
+            ]);
+        }
     }
 
-    public function intallRecipe(string $recipe): void
+    protected function selectRemoteRecipes(): array
     {
-        info('Installing recipe: ' . $recipe);
+        $selectedRemoteRecipes = $this->argument('recipe');
 
-        $this->pullFromRecipeFromApi($recipe);
-    }
-
-    protected function pullRecipe(): string
-    {
-        $slug = $this->argument('recipe');
-
-        if (empty($slug)) {
-            return select(
+        if (empty($selectedRemoteRecipes)) {
+            return multiselect(
                 label: 'Which recipe(s) should I pull?',
-                options: $this->pullFromListFromApi(),
+                options: app(MiseService::class)->allForSelect(),
             );
         }
 
-        return $slug;
+        if (count($missingRecipes = array_diff($selectedRemoteRecipes, app(MiseService::class)->keys())) > 0) {
+            error('The following keys were not found and will be skipped');
+            note(collect($missingRecipes)->map(fn ($key) => "  {$key}")->implode("\n"));
+        }
+
+        return app(MiseService::class)->keys()->filter(
+            fn (string $key) => in_array($key, $selectedRemoteRecipes)
+        )->toArray();
     }
 
-    private function pullFromListFromApi()
+    private function install($key)
     {
-        // @todo: cleanup api config
-        $data = Http::get('http://mise-app.test/api/recipes')
-            ->throw()
-            ->json('data');
+        info('Installing recipe: ' . $key);
 
-        return collect($data)->pluck('name', 'slug')->all();
-    }
-
-    private function pullFromRecipeFromApi($string)
-    {
-        $data = Http::get('http://mise-app.test/api/recipes/' . $string)
-            ->throw()
-            ->json('data');
+        $data = app(MiseService::class)->findByKey($key);
 
         Storage::drive('local-recipes')->put($data['class'] . '.php', $data['file']);
 

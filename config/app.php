@@ -57,4 +57,5 @@ return [
         App\Providers\AppServiceProvider::class,
     ],
 
+    'mise-url' => env('MISE_URL', 'https://mise.dev'),
 ];
