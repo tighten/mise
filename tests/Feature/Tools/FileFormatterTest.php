@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Tools;
 
 use App\Tools\FileFormatter;
@@ -13,63 +11,20 @@ beforeEach(function () {
 });
 
 describe('PHP File Formatting', function () {
-    it('it sorts imports', function () {
-        $format = new FileFormatter;
-
-        Storage::put('UnOrganizedImports.php', File::get(base_path('tests/Fixtures/FileFormatter/PHP/UnOrganizedImports.php.fixture')));
-
-        $format->file('UnOrganizedImports.php')
-            ->importOrder()
-            ->fix();
-
-        expect(Storage::get('UnOrganizedImports.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/OrganisedImports.php.fixture')));
-    });
-
-    it('it fixes array syntax', function () {
-        $format = new FileFormatter;
-
-        Storage::put('ArrayFunctionSyntax.php', File::get('tests/Fixtures/FileFormatter/PHP/ArrayFunctionSyntax.php.fixture'));
-
-        $format->file('ArrayFunctionSyntax.php')
-            ->arraySyntax()
-            ->fix();
-
-        expect(Storage::get('ArrayFunctionSyntax.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/ArrayShortSyntax.php.fixture')));
-    });
-
-    it('fixes multiple issues', function () {
-        $format = new FileFormatter;
-
-        Storage::put('MultipleIssues.php', File::get('tests/Fixtures/FileFormatter/PHP/MultipleIssues.php.fixture'));
-
-        $format->file('MultipleIssues.php')
-            ->importOrder()
-            ->arraySyntax()
-            ->fix();
-
-        expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
-    });
-
     it('accepts an array of php-cs-fixer rules', function () {
-        $format = new FileFormatter;
-
+        $formatter = new FileFormatter;
         Storage::put('MultipleIssues.php', File::get('tests/Fixtures/FileFormatter/PHP/MultipleIssues.php.fixture'));
 
-        $format->file('MultipleIssues.php')
-            ->rules(['ordered_imports', 'array_syntax'])
-            ->fix();
+        $formatter->fix('MultipleIssues.php', ['ordered_imports', 'array_syntax']);
 
         expect(Storage::get('MultipleIssues.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/MultipleIssuesFixed.php.fixture')));
     });
 
-    it('accepts a string name of a php-cs-fixer rule', function () {
+    it('accepts a single php-cs-fixer rule as a string', function () {
         $format = new FileFormatter;
-
         Storage::put('UnOrganizedImports.php', File::get(base_path('tests/Fixtures/FileFormatter/PHP/UnOrganizedImports.php.fixture')));
 
-        $format->file('UnOrganizedImports.php')
-            ->rules('ordered_imports')
-            ->fix();
+        $format->fix('UnOrganizedImports.php', 'ordered_imports');
 
         expect(Storage::get('UnOrganizedImports.php'))->toBe(File::get(base_path('tests/Fixtures/FileFormatter/PHP/OrganisedImports.php.fixture')));
     });
