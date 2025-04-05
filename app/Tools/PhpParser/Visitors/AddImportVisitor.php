@@ -6,11 +6,16 @@ use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\NodeVisitorAbstract;
 
-class AddImportVisitor extends NodeVisitorAbstract {
-    /**
-     * @var array|\class-string[]|string|string[]
-     */
+class AddImportVisitor extends NodeVisitorAbstract
+{
+    /** @var class-string|array<class-string> */
     private string|array $imports;
+
+    /** @param class-string|array<class-string> $imports */
+    public function __construct(string|array $imports)
+    {
+        $this->imports = is_array($imports) ? $imports : [$imports];
+    }
 
     public function leaveNode(Node $node): void
     {
@@ -19,10 +24,5 @@ class AddImportVisitor extends NodeVisitorAbstract {
                 $node->uses[] = new Node\UseItem(new Name($import));
             }
         }
-    }
-
-    /** @param class-string|array<class-string> $imports */
-    public function __construct(string|array $imports) {
-        $this->imports = is_array($imports) ? $imports : [$imports];
     }
 }
