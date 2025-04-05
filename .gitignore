@@ -4,3 +4,4 @@
 /.vagrant
 .phpunit.result.cache
 /storage/logs/laravel.log
+/.php-cs-fixer.cache
