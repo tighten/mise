@@ -1,0 +1,11 @@
+<?php
+
+namespace Tests\Fixtures\FileFormatter\PHP;
+
+use Tests\TestCase;
+use App\Tools\FileFormatter;
+use Illuminate\Support\Facades\File;
+
+class MultipleIssues {
+    public $array = array(1, 2, 3);
+}
