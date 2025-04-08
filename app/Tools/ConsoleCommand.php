@@ -10,9 +10,7 @@ class ConsoleCommand
 {
     public function exec(string $command): static
     {
-        $cmd = $command;
-        // info(" > '{$command}'");
-        Process::run($cmd);
+        Process::run($command);
 
         return $this;
     }
