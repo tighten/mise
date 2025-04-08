@@ -6,9 +6,9 @@ use App\Recipes\Recipe;
 use App\Steps\Database\Migrate;
 use App\Steps\Files\CreateFile;
 use App\Steps\Files\DeleteFiles;
-use App\Steps\Laravel\InstallSanctum;
 use App\Steps\Files\PublishStubs;
 use App\Steps\Git\AddAndCommit;
+use App\Steps\Laravel\InstallSanctum;
 use App\Steps\Step;
 
 use function Laravel\Prompts\confirm;

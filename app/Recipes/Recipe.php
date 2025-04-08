@@ -11,15 +11,17 @@ use function Laravel\Prompts\warning;
 
 abstract class Recipe
 {
-    abstract public function name(): string;
-    abstract public function description(): string;
-
     public string $key;
+
+    abstract public function name(): string;
+
+    abstract public function description(): string;
 
     public function step(string $stepName, ...$params): void
     {
-        if (isset ($params[0]) && is_callable($params[0])) {
+        if (isset($params[0]) && is_callable($params[0])) {
             $this->callableStep($stepName, $params[0]);
+
             return;
         }
 
