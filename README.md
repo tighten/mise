@@ -1,3 +1,5 @@
+![Mise](mise-banner.png?version=1)
+
 # Mise ("meez")
 
 > [!WARNING]  
