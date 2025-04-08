@@ -1,6 +1,7 @@
 <?php
 
 use App\Tools\Git;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 
 test('git->add("path/to/my-file")', function () {
@@ -52,4 +53,17 @@ test("git->addAndCommit('My commit message', '/a/custom/path')", function () {
     $git->addAndCommit($message, $path);
 
     Process::assertRan("git add '{$path}' && git commit -m '{$message}'");
+});
+
+test('no-git context', function () {
+    Process::fake();
+    $git = new Git;
+
+    Context::add('no-git', false);
+    $git->add('default-state.txt');
+    Process::assertRan("git add 'default-state.txt'");
+
+    Context::add('no-git', true);
+    $git->add('disabled-state.txt');
+    Process::assertNotRan("git add 'disabled-state.txt'");
 });
