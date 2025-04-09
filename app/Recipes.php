@@ -5,12 +5,13 @@ namespace App;
 use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class Recipes
 {
     public function all(): Collection
     {
-        $customRecipesDir = $_SERVER['HOME'] . '/.mise/Recipes';
+        $customRecipesDir = Storage::disk('local-recipes')->path('');
 
         if (is_dir($customRecipesDir)) {
             $this->loadFilesInPath($customRecipesDir);

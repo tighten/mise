@@ -11,5 +11,9 @@ return [
             'driver' => 'local',
             'root' => dirname(__FILE__) . '/..',
         ],
+        'local-recipes' => [
+            'driver' => 'local',
+            'root' => $_SERVER['HOME'] . '/.mise/Recipes',
+        ],
     ],
 ];
