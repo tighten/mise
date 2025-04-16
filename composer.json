@@ -24,6 +24,7 @@
         "php": "^8.2.0"
     },
     "require-dev": {
+        "illuminate/http": "^11.5",
         "laravel-zero/framework": "^11.36.1",
         "friendsofphp/php-cs-fixer": "^3.75",
         "illuminate/log": "^11.5",
