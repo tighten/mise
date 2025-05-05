@@ -164,7 +164,7 @@ test('file->replaceLines(...) with limit', function () {
     $content = "Line 1\nLine 2\nLine 3";
     Storage::put($path, $content);
 
-    (new File)->replaceLines($path, 'Line', "Replaced Line", 1);
+    (new File)->replaceLines($path, 'Line', 'Replaced Line', 1);
 
     expect(Storage::get($path))->toBe("Replaced Line\nLine 2\nLine 3");
 });

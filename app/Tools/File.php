@@ -52,9 +52,8 @@ class File extends ConsoleCommand
     /**
      * Copy a stub file into the target codebase.
      *
-     * @param string $stub The relative source path (underneath the `stubs` directory)
-     * @param string $destination The relative destination path (underneath the target codebase base_path)
-     * @return static
+     * @param  string  $stub  The relative source path (underneath the `stubs` directory)
+     * @param  string  $destination  The relative destination path (underneath the target codebase base_path)
      */
     public function stub(string $stub, string $destination): static
     {
@@ -110,6 +109,7 @@ class File extends ConsoleCommand
                 $limitCount++;
 
                 $indent = strlen($line) - strlen(ltrim($line));
+
                 return $this->indentAllLines($replace, $indent);
             }
 
@@ -134,6 +134,7 @@ class File extends ConsoleCommand
                 $limitCount++;
 
                 $indent = strlen($line) - strlen(ltrim($line));
+
                 return $line . "\n" . $this->indentAllLines($content, $indent);
             }
 
