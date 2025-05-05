@@ -189,11 +189,9 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: Sort imports afterward
-    // @todo: Improve this to handle traits, interfaces, etc.
-    public function addImport(string $path, string $class): static
+    public function addImports(string $path, string|array $classes): static
     {
-        (new Editor())->edit($path, [new AddImportVisitor($class)]);
+        (new Editor)->edit($path, [new AddImportVisitor($classes)]);
 
         return $this;
     }

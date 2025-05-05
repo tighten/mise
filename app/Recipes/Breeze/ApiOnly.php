@@ -52,7 +52,7 @@ class ApiOnly extends Recipe
         });
 
         $this->step('Modify App Service Provider', function (Step $step) {
-            $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
+            $step->file->addImports('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
             $step->file->prependToMethod(
                 'app/Providers/AppServiceProvider.php',
                 'boot',
