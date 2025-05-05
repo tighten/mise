@@ -190,7 +190,7 @@ test('file->stub(...)', function () {
 
     unlink(base_path('stubs/testing.txt'));
 })->after(function () {
-    /// @todo: Figure out why this is not being called....
+    // / @todo: Figure out why this is not being called....
     //         ... Tony and Mateus discovered: the test name is normalized to run it, but not to check for after().
     //         ... so this requires a PR to fix Pest to work with test names containing strange characters.
     unlink(base_path('stubs/testing.txt'));
@@ -203,12 +203,12 @@ test('file->stub(...) throws exception for non-existent stub', function () {
 
 test('file->addImport(...)', function () {
     $path = 'test.php';
-    $initialContent = "<?php\n\nnamespace App\Awesome;\n\nclass Test {\n    // Some code\n}";
+    $initialContent = "<?php\n\nnamespace App\Awesome;\n\nclass Test\n{\n    // Some code\n}";
     Storage::put($path, $initialContent);
 
-    (new File)->addImport($path, 'App\Models\User');
+    (new File)->addImports($path, 'App\Models\User');
 
-    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\User;\n\nclass Test {\n    // Some code\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\User;\nclass Test\n{\n    // Some code\n}");
 });
 
 test('file->addImport(...) with other imports', function () {
@@ -216,17 +216,17 @@ test('file->addImport(...) with other imports', function () {
     $initialContent = "<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact;\n\nclass Test {\n    // Some code\n}";
     Storage::put($path, $initialContent);
 
-    (new File)->addImport($path, 'App\Models\User');
+    (new File)->addImports($path, 'App\Models\User');
 
-    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact;\nuse App\Models\User;\n\nclass Test {\n    // Some code\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact, App\Models\User;\nclass Test\n{\n    // Some code\n}");
 });
 
 test('file->addImport(...) skips duplicate imports', function () {
     $path = 'test.php';
-    $initialContent = "<?php\n\nuse App\Models\User;\n\nclass Test {\n    // Some code\n}";
+    $initialContent = "<?php\n\nuse App\Models\User;\nclass Test\n{\n    // Some code\n}";
     Storage::put($path, $initialContent);
 
-    (new File)->addImport($path, 'App\Models\User');
+    (new File)->addImports($path, 'App\Models\User');
 
     expect(Storage::get($path))->toBe($initialContent);
 });
@@ -236,7 +236,7 @@ test('file->addImport(...) throws exception when no class is found', function ()
     $initialContent = "<?php\n\n// Just some code without a class";
     Storage::put($path, $initialContent);
 
-    expect(fn () => (new File)->addImport($path, 'App\Models\User'))
+    expect(fn () => (new File)->addImports($path, 'App\Models\User'))
         ->toThrow(Exception::class, "Class keyword not found in {$path}");
 });
 
