@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Recipes;
 use App\Recipes\Recipe;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
 
@@ -16,7 +17,8 @@ class ApplyCommand extends Command
 {
     protected $signature =
         'apply {recipe?*}' .
-        '{--no-process : prevent processes from executing}';
+        '{--no-process : prevent processes from executing}' .
+        '{--no-git : prevent processes from executing}';
 
     protected $description = 'Apply one or more recipes';
 
@@ -26,6 +28,8 @@ class ApplyCommand extends Command
             info('Dry run enabled');
             Process::fake();
         }
+
+        Context::add('no-git', $this->option('no-git'));
 
         foreach ($this->selectedRecipes() as $recipe) {
             $this->runRecipe($recipe);

@@ -64,5 +64,3 @@ it('throws exception when finding invalid recipe key', function () {
     expect(fn () => (new Recipes)->findByKey('invalid-key'))
         ->toThrow(ItemNotFoundException::class);
 });
-
-
