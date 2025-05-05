@@ -89,7 +89,7 @@ class File extends ConsoleCommand
     {
         $lines = explode("\n", Storage::get($path));
         $lines = array_filter($lines, function ($line) use ($content) {
-            return strpos($line, $content) === false;
+            return ! str_contains($line, $content);
         });
         Storage::put($path, implode("\n", $lines));
 
