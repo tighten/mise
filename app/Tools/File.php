@@ -2,7 +2,7 @@
 
 namespace App\Tools;
 
-use App\Tools\PhpParser\Editor;
+use App\Tools\PhpParser;
 use App\Tools\PhpParser\Visitors\AddImportVisitor;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -192,8 +192,8 @@ class File extends ConsoleCommand
 
     public function addImports(string $path, string|array $classes): static
     {
-        (new Editor)->edit($path, [new AddImportVisitor($classes)]);
-      
+        (new PhpParser)->edit($path, [new AddImportVisitor($classes)]);
+
         return $this;
     }
 

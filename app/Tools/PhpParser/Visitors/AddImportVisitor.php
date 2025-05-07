@@ -2,7 +2,7 @@
 
 namespace App\Tools\PhpParser\Visitors;
 
-use App\Tools\PhpParser\Editor;
+use App\Tools\PhpParser;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use PhpParser\Node;
@@ -45,7 +45,7 @@ class AddImportVisitor extends NodeVisitorAbstract
     public function beforeTraverse(array $nodes): ?array
     {
         if (! $this->hasClass($nodes)) {
-            throw new Exception('Class keyword not found in ' . Cache::get(Editor::ACTIVE_FILENAME));
+            throw new Exception('Class keyword not found in ' . Cache::get(PhpParser::ACTIVE_FILENAME));
         }
 
         if (! $this->hasImports($nodes)) {

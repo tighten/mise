@@ -208,7 +208,7 @@ test('file->addImport(...)', function () {
 
     (new File)->addImports($path, 'App\Models\User');
 
-    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\User;\nclass Test\n{\n    // Some code\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\User;\n\nclass Test\n{\n    // Some code\n}");
 });
 
 test('file->addImport(...) with other imports', function () {
@@ -218,7 +218,7 @@ test('file->addImport(...) with other imports', function () {
 
     (new File)->addImports($path, 'App\Models\User');
 
-    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact, App\Models\User;\nclass Test\n{\n    // Some code\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact;\nuse App\Models\User;\n\nclass Test\n{\n    // Some code\n}");
 });
 
 test('file->addImport(...) skips duplicate imports', function () {

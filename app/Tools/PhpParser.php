@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Tools\PhpParser;
+namespace App\Tools;
 
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +11,7 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as PhpFilePrinter;
 
-class Editor
+class PhpParser
 {
     const ACTIVE_FILENAME = self::class . '-filename';
 

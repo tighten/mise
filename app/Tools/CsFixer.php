@@ -4,7 +4,7 @@ namespace App\Tools;
 
 use Illuminate\Support\Facades\Storage;
 
-class FileFormatter extends ConsoleCommand
+class CsFixer extends ConsoleCommand
 {
     public function fix($path, string|array $rules): void
     {

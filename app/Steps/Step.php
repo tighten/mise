@@ -6,7 +6,7 @@ use App\Tools\Artisan;
 use App\Tools\Composer;
 use App\Tools\ConsoleCommand;
 use App\Tools\File;
-use App\Tools\FileFormatter;
+use App\Tools\CsFixer;
 use App\Tools\Git;
 use App\Tools\Npm;
 
@@ -21,7 +21,7 @@ class Step
         public ConsoleCommand $console,
         public Npm $npm,
         public File $file,
-        public FileFormatter $formatter,
+        public CsFixer $fixer,
     ) {}
 
     public function name(): string

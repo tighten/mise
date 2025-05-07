@@ -1,0 +1,7 @@
+<?php
+
+namespace Tests\Fixtures\CsFixer\PHP;
+
+class ArraySyntax {
+    public $array = [1, 2, 3];
+}
