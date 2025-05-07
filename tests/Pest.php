@@ -86,7 +86,8 @@ pest()->presets()->custom('zero', function (array $userNamespaces) {
         expect('App')
             ->classes()
             ->not->toImplement(Throwable::class)
-            ->ignoring('App\Exceptions'),
+            ->ignoring('App\Exceptions')
+            ->ignoring('App\Tools\PhpParser\Exceptions'),
 
         expect('App\Commands')
             ->classes()

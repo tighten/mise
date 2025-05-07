@@ -52,13 +52,13 @@ class ApiOnly extends Recipe
         });
 
         $this->step('Modify App Service Provider', function (Step $step) {
-            $step->file->addImport('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
+            $step->file->addImports('app/Providers/AppServiceProvider.php', 'Illuminate\Auth\Notifications\ResetPassword');
             $step->file->prependToMethod(
                 'app/Providers/AppServiceProvider.php',
                 'boot',
                 "ResetPassword::createUrlUsing(function (object \$notifiable, string \$token) {\n    return config('app.frontend_url').\"/password-reset/\$token?email=\{\$notifiable->getEmailForPasswordReset()}\";\n});"
             );
-            $step->formatter->fix('app/Providers/AppServiceProvider.php', 'ordered_imports');
+            $step->formatter->fix('app/Providers/AppServiceProvider.php', ['single_import_per_statement', 'ordered_imports', 'single_line_after_imports']);
         });
 
         $this->step('Modify existing Auth controllers', function (Step $step) {

@@ -2,6 +2,8 @@
 
 namespace App\Tools;
 
+use App\Tools\PhpParser\Editor;
+use App\Tools\PhpParser\Visitors\AddImportVisitor;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
@@ -86,7 +88,7 @@ class File extends ConsoleCommand
     {
         $lines = explode("\n", Storage::get($path));
         $lines = array_filter($lines, function ($line) use ($content) {
-            return strpos($line, $content) === false;
+            return ! str_contains($line, $content);
         });
         Storage::put($path, implode("\n", $lines));
 
@@ -188,42 +190,10 @@ class File extends ConsoleCommand
         return $this;
     }
 
-    // @todo: Sort imports afterward
-    // @todo: Improve this to handle traits, interfaces, etc.
-    public function addImport(string $path, string $class): static
+    public function addImports(string $path, string|array $classes): static
     {
-        $useString = "use {$class};\n";
-
-        if (str_contains($contents = Storage::get($path), $useString)) {
-            return $this;
-        }
-
-        $contents = explode("\n", $contents);
-
-        // Find the first line that starts with `class`
-        $classIndex = array_search(
-            'class',
-            array_map(fn ($line) => str_starts_with($line, 'class') ? substr($line, 0, 5) : null, $contents)
-        );
-
-        if ($classIndex === false) {
-            throw new Exception("Class keyword not found in {$path}");
-        }
-
-        // Insert the use statement just before the class definition
-        $newContents = array_merge(
-            array_slice($contents, 0, $classIndex),
-            [$useString],
-            array_slice($contents, $classIndex)
-        );
-
-        if (! $newContents[$classIndex - 1] && str_starts_with($newContents[$classIndex - 2], 'use')) {
-            // Remove line above this import entirely... but only if this is the only import
-            unset($newContents[$classIndex - 1]);
-        }
-
-        Storage::put($path, implode("\n", $newContents));
-
+        (new Editor)->edit($path, [new AddImportVisitor($classes)]);
+      
         return $this;
     }
 
