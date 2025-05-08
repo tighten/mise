@@ -193,6 +193,7 @@ class File extends ConsoleCommand
     public function addImports(string $path, string|array $classes): static
     {
         (new PhpParser)->edit($path, [new AddImportVisitor($classes)]);
+        (new CsFixer)->fix($path, ['single_import_per_statement', 'ordered_imports', 'single_line_after_imports']);
 
         return $this;
     }

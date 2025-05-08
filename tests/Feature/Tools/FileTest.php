@@ -223,7 +223,7 @@ test('file->addImport(...) with other imports', function () {
 
 test('file->addImport(...) skips duplicate imports', function () {
     $path = 'test.php';
-    $initialContent = "<?php\n\nuse App\Models\User;\nclass Test\n{\n    // Some code\n}";
+    $initialContent = "<?php\n\nuse App\Models\User;\n\nclass Test\n{\n    // Some code\n}";
     Storage::put($path, $initialContent);
 
     (new File)->addImports($path, 'App\Models\User');
