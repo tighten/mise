@@ -7,6 +7,30 @@ use PhpParser\Node;
 trait InteractsWithNodes
 {
     /**
+     * Return whether the given AST has an class/interface/trait declaration.
+     *
+     * @param  array<Node>  $ast
+     */
+    protected function hasTypeKeyword(array $ast): bool
+    {
+        return collect($this->getStatements($ast))
+            ->contains(function ($value) {
+                return $value instanceof Node\Stmt\Class_ || $value instanceof Node\Stmt\Interface_ || $value instanceof Node\Stmt\Trait_;
+            });
+    }
+
+    /**
+     * Return whether the given AST has one or more "use" (import) statements.
+     *
+     * @param  array<Node>  $ast
+     */
+    protected function hasImports(array $ast): bool
+    {
+        return collect($this->getStatements($ast))
+            ->contains(fn ($value) => $value instanceof Node\Stmt\Use_);
+    }
+
+    /**
      * @param  array<Node>  $ast
      */
     protected function getStatements(array $ast)
@@ -16,16 +40,6 @@ trait InteractsWithNodes
         }
 
         return $ast;
-    }
-
-    protected function hasImports(array $ast): bool
-    {
-        return collect($this->getStatements($ast))->contains(fn ($value) => $value instanceof Node\Stmt\Use_);
-    }
-
-    protected function hasClass(array $ast): bool
-    {
-        return collect($this->getStatements($ast))->contains(fn ($value) => $value instanceof Node\Stmt\Class_);
     }
 
     protected function setStatements(array $ast, array $statements): array
