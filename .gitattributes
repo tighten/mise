@@ -1,6 +1,17 @@
 * text=auto eol=lf
 /.github export-ignore
-.scrutinizer.yml export-ignore
-BACKERS.md export-ignore
-CONTRIBUTING.md export-ignore
-CHANGELOG.md export-ignore
+/app export-ignore
+/bootstrap export-ignore
+/config export-ignore
+/stubs export-ignore
+/tests export-ignore
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/box.json export-ignore
+/composer.lock export-ignore
+/mise export-ignore
+/duster.json export-ignore
+/mise-banner.png export-ignore
+/phpunit.xml.dist export-ignore
+/README.md export-ignore
