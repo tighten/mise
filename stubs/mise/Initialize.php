@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Recipes\Recipe;
 
-class Initialize extends Recipe
+return new class extends Recipe
 {
     public function name(): string
     {
@@ -16,8 +16,8 @@ class Initialize extends Recipe
         return 'Initialize the project';
     }
 
-    public function __invoke()
+    public function __invoke(): void
     {
-        // TODO: add your custom set-up and configuration code here.
+        \Laravel\Prompts\info('Initializing the project...');
     }
-}
+};
