@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use App\Tools\File;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
@@ -22,17 +21,32 @@ class InitializeCommand extends Command
 
     public function handle(): int
     {
-        $initializeScript = '.mise/Initialize.php';
-        $initializeScriptPath = $this->bold($this->black(Storage::path($initializeScript)));
-        if (File::fileExists($initializeScript)) {
-            $class = require $initializeScript;
-            info('Running: ' . $initializeScriptPath);
+        $scriptPath = '.mise/Initialize.php';
+
+        if (! $this->runScript($scriptPath)) {
+            return 1;
+        }
+
+        if (Storage::deleteDirectory('.mise')) {
+            info('Deleted: ' . $scriptPath);
+        }
+
+        return 0;
+    }
+
+    private function runScript(string $scriptPath): bool
+    {
+        $displayScriptPath = $this->bold($this->black($scriptPath));
+        if (Storage::fileExists($scriptPath)) {
+            // @todo wrap in try/catch
+            $class = require Storage::path($scriptPath);
+            info('Running: ' . $displayScriptPath);
             ($class)();
 
-            return 0;
+            return true;
         }
-        error('Could not find initialization script: ' . $initializeScriptPath);
+        error('Could not find initialization script: ' . $displayScriptPath);
 
-        return 1;
+        return false;
     }
 }
