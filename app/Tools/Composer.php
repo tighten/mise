@@ -17,4 +17,11 @@ class Composer extends ConsoleCommand
 
         return $this;
     }
+
+    public function remove(string $package): static
+    {
+        $this->exec("composer remove {$package}");
+
+        return $this;
+    }
 }

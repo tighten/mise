@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Tools\Composer;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
 
-use function Laravel\Prompts\error;
-use function Laravel\Prompts\info;
+use function Laravel\Prompts\note;
 
 class InitializeCommand extends Command
 {
@@ -27,26 +27,50 @@ class InitializeCommand extends Command
             return 1;
         }
 
-        if (Storage::deleteDirectory('.mise')) {
-            info('Deleted: ' . $scriptPath);
+        if (Storage::delete($scriptPath)) {
+            $this->mise("Deleted {$this->heavy($scriptPath)}");
         }
 
-        return 0;
+        $package = 'tightenco/mise';
+        app(Composer::class)->remove($package);
+        if (Storage::missing("vendor/{$package}")) {
+            $this->mise("Removed {$this->heavy($package)}");
+
+            return 0;
+        }
+
+        $this->miseError("Failed to remove {$this->heavy($scriptPath)}");
+
+        return 1;
     }
 
     private function runScript(string $scriptPath): bool
     {
-        $displayScriptPath = $this->bold($this->black($scriptPath));
-        if (Storage::fileExists($scriptPath)) {
+        if (Storage::fileExists("{$scriptPath}")) {
             // @todo wrap in try/catch
             $class = require Storage::path($scriptPath);
-            info('Running: ' . $displayScriptPath);
+            $this->mise("Running {$this->heavy($scriptPath)}");
             ($class)();
 
             return true;
         }
-        error('Could not find initialization script: ' . $displayScriptPath);
+        $this->miseError('Could not find initialization script: ' . $this->heavy($scriptPath));
 
         return false;
+    }
+
+    private function mise(string $text): void
+    {
+        note($this->green('[MISE]') . " {$text}");
+    }
+
+    private function heavy(string $text): string
+    {
+        return $this->bold($this->black($text));
+    }
+
+    private function miseError(string $text): void
+    {
+        note($this->red('[MISE]') . " {$text}");
     }
 }
