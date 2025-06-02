@@ -23,7 +23,7 @@ class InitializeCommand extends Command
     public function handle(): int
     {
         $miseDirectory = '.mise';
-        $scriptPath = "{$miseDirectory}/Initialize.php";
+        $scriptPath = "{$miseDirectory}/initialize.php";
 
         if (! $this->runScript($scriptPath)) {
             return 1;

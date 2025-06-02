@@ -37,7 +37,7 @@ class AddInitializeCommand extends Command
         }
 
         if ($createFile) {
-            app(File::class)->stub('mise/Initialize.php', $filePath);
+            app(File::class)->stub('mise/initialize.php', $filePath);
             info(sprintf('%s setup file %s', $fileExists ? 'Replaced' : 'Created', $filePath));
         }
 
