@@ -6,9 +6,6 @@ use App\Tools\PhpParser\Visitors\AddImportVisitor;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * @mixin Storage
- */
 class File extends ConsoleCommand
 {
     public function create(string $path, string $content = ''): static
@@ -64,12 +61,6 @@ class File extends ConsoleCommand
         Storage::put($destination, $contents);
 
         return $this;
-    }
-
-    public static function __callStatic(string $name, array $arguments)
-    {
-        return Storage::$name(...$arguments);
-
     }
 
     public function stubAll(string $path): static

@@ -6,6 +6,7 @@ namespace App\Commands;
 
 use App\Tools\File;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
 
@@ -30,13 +31,13 @@ class AddInitializeCommand extends Command
     {
         $baseDirectory = '.mise';
         $relativeFilePath = "{$baseDirectory}/Initialize.php";
-        $filePath = File::path($relativeFilePath);
+        $filePath = Storage::path($relativeFilePath);
 
         $createFile = true;
 
-        File::makeDirectory($baseDirectory);
+        Storage::makeDirectory($baseDirectory);
 
-        $fileExists = File::fileExists($relativeFilePath);
+        $fileExists = Storage::fileExists($relativeFilePath);
 
         if ($fileExists && ! $this->option('force')) {
             error("File {$filePath} is allready present.");
