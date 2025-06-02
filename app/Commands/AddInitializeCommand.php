@@ -22,30 +22,22 @@ class AddInitializeCommand extends Command
 
     protected $description = 'Add the Mise post-installation files';
 
-    private string $relativeFilePath;
-    private string $filePath;
-    private string $relativeBasePath;
-
     /** @throws Exception */
     public function handle(): int
     {
-        $baseDirectory = '.mise';
-        $relativeFilePath = "{$baseDirectory}/Initialize.php";
-        $filePath = Storage::path($relativeFilePath);
-
         $createFile = true;
+        $filePath = '.mise/initialize.php';
 
-        Storage::makeDirectory($baseDirectory);
+        Storage::makeDirectory('.mise');
 
-        $fileExists = Storage::fileExists($relativeFilePath);
-
+        $fileExists = Storage::fileExists($filePath);
         if ($fileExists && ! $this->option('force')) {
             error("File {$filePath} is allready present.");
             $createFile = confirm('Do you want to overwrite it?', false);
         }
 
         if ($createFile) {
-            app(File::class)->stub('mise/Initialize.php', $relativeFilePath);
+            app(File::class)->stub('mise/Initialize.php', $filePath);
             info(sprintf('%s setup file %s', $fileExists ? 'Replaced' : 'Created', $filePath));
         }
 
