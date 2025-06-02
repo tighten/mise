@@ -10,6 +10,7 @@ use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
 
 use function Laravel\Prompts\note;
+use function Termwind\terminal;
 
 class InitializeCommand extends Command
 {
@@ -21,14 +22,15 @@ class InitializeCommand extends Command
 
     public function handle(): int
     {
-        $scriptPath = '.mise/Initialize.php';
+        $miseDirectory = '.mise';
+        $scriptPath = "{$miseDirectory}/Initialize.php";
 
         if (! $this->runScript($scriptPath)) {
             return 1;
         }
 
-        if (Storage::delete($scriptPath)) {
-            $this->mise("Deleted {$this->heavy($scriptPath)}");
+        if (Storage::deleteDirectory($miseDirectory)) {
+            $this->mise("Deleted {$this->heavy($miseDirectory)} directory");
         }
 
         $package = 'tightenco/mise';
@@ -47,10 +49,13 @@ class InitializeCommand extends Command
     private function runScript(string $scriptPath): bool
     {
         if (Storage::fileExists("{$scriptPath}")) {
-            // @todo wrap in try/catch
+            // @todo wrap in try/catch (Mise needs beter exception handling in general)
             $class = require Storage::path($scriptPath);
             $this->mise("Running {$this->heavy($scriptPath)}");
+            $this->hr();
             ($class)();
+            $this->hr();
+            $this->mise("Completed {$this->heavy($scriptPath)}");
 
             return true;
         }
@@ -61,16 +66,24 @@ class InitializeCommand extends Command
 
     private function mise(string $text): void
     {
-        note($this->green('[MISE]') . " {$text}");
+
+        $label = '[MISE]';
+        note(($this->output->isDecorated() ? $this->green($label) : $label) . " {$text}");
     }
 
     private function heavy(string $text): string
     {
-        return $this->bold($this->black($text));
+        return $this->output->isDecorated() ? $this->bold($this->black($text)) : $text;
     }
 
     private function miseError(string $text): void
     {
-        note($this->red('[MISE]') . " {$text}");
+        $label = '[MISE]';
+        note(($this->output->isDecorated() ? $this->red($label) : $label) . " {$text}");
+    }
+
+    private function hr(): void
+    {
+        note(str_repeat('─', terminal()->width() - 1));
     }
 }
