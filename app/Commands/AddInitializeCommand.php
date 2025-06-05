@@ -28,15 +28,15 @@ class AddInitializeCommand extends Command
         $createFile = true;
         $filePath = '.mise/initialize.php';
 
-        Storage::makeDirectory('.mise');
-
         $fileExists = Storage::fileExists($filePath);
+        
         if ($fileExists && ! $this->option('force')) {
-            error("File {$filePath} is allready present.");
+            error("File {$filePath} is already present.");
             $createFile = confirm('Do you want to overwrite it?', false);
         }
 
         if ($createFile) {
+            Storage::makeDirectory('.mise');
             app(File::class)->stub('mise/initialize.php', $filePath);
             info(sprintf('%s setup file %s', $fileExists ? 'Replaced' : 'Created', $filePath));
         }
