@@ -21,9 +21,8 @@ class InitializeCommand extends Command
     public function handle(): int
     {
         $miseDirectory = '.mise';
-        $scriptPath = "{$miseDirectory}/initialize.php";
 
-        if (! $this->runScript($scriptPath)) {
+        if (! $this->runScript("{$miseDirectory}/initialize.php")) {
             return 1;
         }
 
@@ -34,16 +33,17 @@ class InitializeCommand extends Command
         }
 
         $package = 'tightenco/mise';
-        app(Composer::class)->remove($package);
-        if (Storage::missing("vendor/{$package}")) {
-            $this->mise("Removed {$this->heavy($package)}");
+        $composer = app(Composer::class);
+        $composer->remove($package);
+        if (! $composer->hasDependency($package) && Storage::missing("vendor/{$package}")) {
+            $this->mise("Removed composer package {$this->heavy($package)}");
+        } else {
+            $this->miseError("Failed to remove composer package {$this->heavy($package)}; please remove manually.");
 
-            return 0;
+            return 1;
         }
 
-        $this->miseError("Failed to remove {$this->heavy($scriptPath)}");
-
-        return 1;
+        return 0;
     }
 
     private function runScript(string $scriptPath): bool
