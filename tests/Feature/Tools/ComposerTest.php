@@ -47,7 +47,7 @@ it('loads composer.json - composer->getComposerConfiguration()', function () {
 
     $composer = new Composer;
 
-    expect($composer->getComposerConfiguration())
+    expect($composer->composerConfiguration())
         ->toBe(json_decode($composerJson, true));
 });
 
@@ -57,7 +57,7 @@ it('gets production dependencies - composer->getProductionDependencies()', funct
 
     $composer = new Composer;
 
-    expect($composer->getProductionDependencies())
+    expect($composer->productionDependencies())
         ->toBe(['tightenco/tlint' => '^3.2']);
 });
 
@@ -66,7 +66,7 @@ it('gets dev dependencies - composer->getDevDependencies()', function () {
     Storage::put('composer.json', $composerJson);
 
     $composer = new Composer;
-    expect($composer->getDevelopmentDependencies())
+    expect($composer->developmentDependencies())
         ->toBe(['tightenco/duster' => '^3.2']);
 });
 

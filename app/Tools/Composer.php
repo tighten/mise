@@ -36,7 +36,7 @@ class Composer extends ConsoleCommand
 
     public function hasDevDependency(string $package): bool
     {
-        $dependencies = $this->getDevelopmentDependencies();
+        $dependencies = $this->developmentDependencies();
 
         return isset($dependencies[$package]);
     }
@@ -44,8 +44,8 @@ class Composer extends ConsoleCommand
     public function hasDependency(string $package): bool
     {
         $dependencies = array_merge(
-            $this->getProductionDependencies(),
-            $this->getDevelopmentDependencies(),
+            $this->productionDependencies(),
+            $this->developmentDependencies(),
         );
 
         return isset($dependencies[$package]);
@@ -53,22 +53,22 @@ class Composer extends ConsoleCommand
 
     public function hasProductionDependency(string $package): bool
     {
-        $dependencies = $this->getProductionDependencies();
+        $dependencies = $this->productionDependencies();
 
         return isset($dependencies[$package]);
     }
 
-    public function getDevelopmentDependencies(): mixed
+    public function developmentDependencies(): mixed
     {
-        return $this->getComposerConfiguration('require-dev');
+        return $this->composerConfiguration('require-dev');
     }
 
-    public function getProductionDependencies(): mixed
+    public function productionDependencies(): mixed
     {
-        return $this->getComposerConfiguration('require');
+        return $this->composerConfiguration('require');
     }
 
-    public function getComposerConfiguration(?string $section = null): array
+    public function composerConfiguration(?string $section = null): array
     {
         $configuration = json_decode(Storage::get('composer.json'), true);
 

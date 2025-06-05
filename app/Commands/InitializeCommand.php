@@ -39,7 +39,7 @@ class InitializeCommand extends Command
 
         $package = 'tightenco/mise';
         $this->composer->remove($package);
-        if (! ray()->pass($this->composer->hasDependency($package)) && ray()->pass(Storage::missing("vendor/{$package}"))) {
+        if (! $this->composer->hasDependency($package) && Storage::missing("vendor/{$package}")) {
             $this->mise("Removed composer package {$this->heavy($package)}");
         } else {
             $this->miseError("Failed to remove composer package {$this->heavy($package)}; please remove manually.");
