@@ -18,7 +18,7 @@ class AddInitializeCommand extends Command
 {
     use Colors;
 
-    protected $signature = 'add:init-command {--force : overwrite existing files}';
+    protected $signature = 'add:init {--force : overwrite existing files}';
 
     protected $description = 'Add the Mise post-installation file for use in building starter kits';
 
