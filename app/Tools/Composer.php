@@ -60,16 +60,18 @@ class Composer extends ConsoleCommand
 
     public function getDevelopmentDependencies(): mixed
     {
-        return $this->getComposerConfiguration()['require-dev'];
+        return $this->getComposerConfiguration('require-dev');
     }
 
     public function getProductionDependencies(): mixed
     {
-        return $this->getComposerConfiguration()['require'];
+        return $this->getComposerConfiguration('require');
     }
 
-    public function getComposerConfiguration(): array
+    public function getComposerConfiguration(?string $section = null): array
     {
-        return json_decode(Storage::get('composer.json'), true);
+        $configuration = json_decode(Storage::get('composer.json'), true);
+
+        return $section ? $configuration[$section] : $configuration;
     }
 }
