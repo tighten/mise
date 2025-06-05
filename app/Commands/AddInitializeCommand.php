@@ -20,7 +20,7 @@ class AddInitializeCommand extends Command
 
     protected $signature = 'add:init-command {--force : overwrite existing files}';
 
-    protected $description = 'Add the Mise post-installation files';
+    protected $description = 'Add the Mise post-installation file for use in building starter kits';
 
     /** @throws Exception */
     public function handle(): int
