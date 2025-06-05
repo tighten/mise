@@ -18,6 +18,11 @@ class InitializeCommand extends Command
 
     protected $description = 'Run Mise initialization steps and remove Mise (if defined in ./.mise/initialize.php)';
 
+    public function __construct(protected Composer $composer)
+    {
+        parent::__construct();
+    }
+
     public function handle(): int
     {
         $miseDirectory = '.mise';
@@ -33,9 +38,8 @@ class InitializeCommand extends Command
         }
 
         $package = 'tightenco/mise';
-        $composer = app(Composer::class);
-        $composer->remove($package);
-        if (! $composer->hasDependency($package) && Storage::missing("vendor/{$package}")) {
+        $this->composer->remove($package);
+        if (! ray()->pass($this->composer->hasDependency($package)) && ray()->pass(Storage::missing("vendor/{$package}"))) {
             $this->mise("Removed composer package {$this->heavy($package)}");
         } else {
             $this->miseError("Failed to remove composer package {$this->heavy($package)}; please remove manually.");
@@ -67,7 +71,6 @@ class InitializeCommand extends Command
 
     private function mise(string $text): void
     {
-
         $label = '[MISE]';
         note(($this->output->isDecorated() ? $this->green($label) : $label) . " {$text}");
     }
