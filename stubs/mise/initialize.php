@@ -11,6 +11,8 @@ return new class extends Recipe
     public function __invoke(): void
     {
         info('Initializing the project...');
+        
+        // Define initialization steps here
     }
 
     public function name(): string
@@ -20,6 +22,6 @@ return new class extends Recipe
 
     public function description(): string
     {
-        return 'Initialize the project';
+        return 'Use Mise and pre-defined steps to initialize the project, then delete Mise and the steps for a clean install.';
     }
 };
