@@ -48,20 +48,21 @@ class InitializeCommand extends Command
 
     private function runScript(string $scriptPath): bool
     {
-        if (Storage::fileExists("{$scriptPath}")) {
-            // @todo wrap in try/catch (Mise needs beter exception handling in general)
-            $class = require Storage::path($scriptPath);
-            $this->mise("Running {$this->heavy($scriptPath)}");
-            $this->hr();
-            ($class)();
-            $this->hr();
-            $this->mise("Completed {$this->heavy($scriptPath)}");
+        if (! Storage::fileExists("{$scriptPath}")) {
+            $this->miseError('Could not find initialization script: ' . $this->heavy($scriptPath));
 
-            return true;
+            return false;
         }
-        $this->miseError('Could not find initialization script: ' . $this->heavy($scriptPath));
+            
+        // @todo wrap in try/catch (Mise needs better exception handling in general)
+        $class = require Storage::path($scriptPath);
+        $this->mise("Running {$this->heavy($scriptPath)}");
+        $this->hr();
+        ($class)();
+        $this->hr();
+        $this->mise("Completed {$this->heavy($scriptPath)}");
 
-        return false;
+        return true;
     }
 
     private function mise(string $text): void
