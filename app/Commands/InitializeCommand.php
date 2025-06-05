@@ -18,7 +18,7 @@ class InitializeCommand extends Command
 
     protected $signature = 'initialize';
 
-    protected $description = 'runs ./mise/Initialize.php (if present) <fg=red>@todo: fix wording 🔧</>';
+    protected $description = 'Run Mise initialization steps and remove Mise (if defined in ./.mise/initialize.php)';
 
     public function handle(): int
     {
