@@ -31,7 +31,9 @@ class InitializeCommand extends Command
 
         if (Storage::deleteDirectory($miseDirectory)) {
             $this->mise("Deleted {$this->heavy($miseDirectory)} directory");
-        }
+        } else {
+            $this->miseError("Failed deleting {$this->heavy($miseDirectory)}; please delete manually.");
+        } 
 
         $package = 'tightenco/mise';
         app(Composer::class)->remove($package);
