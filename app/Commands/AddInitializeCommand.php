@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Commands;
 
 use App\Tools\File;
@@ -29,7 +27,7 @@ class AddInitializeCommand extends Command
         $filePath = '.mise/initialize.php';
 
         $fileExists = Storage::fileExists($filePath);
-        
+
         if ($fileExists && ! $this->option('force')) {
             error("File {$filePath} is already present.");
             $createFile = confirm('Do you want to overwrite it?', false);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Commands;
 
 use App\Tools\Composer;
@@ -33,7 +31,7 @@ class InitializeCommand extends Command
             $this->mise("Deleted {$this->heavy($miseDirectory)} directory");
         } else {
             $this->miseError("Failed deleting {$this->heavy($miseDirectory)}; please delete manually.");
-        } 
+        }
 
         $package = 'tightenco/mise';
         app(Composer::class)->remove($package);
@@ -55,7 +53,7 @@ class InitializeCommand extends Command
 
             return false;
         }
-            
+
         // @todo wrap in try/catch (Mise needs better exception handling in general)
         $class = require Storage::path($scriptPath);
         $this->mise("Running {$this->heavy($scriptPath)}");
