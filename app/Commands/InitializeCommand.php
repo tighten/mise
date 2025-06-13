@@ -58,7 +58,6 @@ class InitializeCommand extends Command
             return false;
         }
 
-        // @todo wrap in try/catch (Mise needs better exception handling in general)
         $class = require Storage::path($scriptPath);
         $this->mise("Running {$this->heavy($scriptPath)}");
         $this->hr();
