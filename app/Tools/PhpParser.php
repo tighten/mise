@@ -29,7 +29,6 @@ class PhpParser
     /**
      * Central entry point for editing PHP files with PHP Parser.
      *
-     * @param  string  $phpFilePath
      * @param  array<NodeVisitorAbstract>  $edits
      *
      * @throws Exception

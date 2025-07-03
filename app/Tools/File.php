@@ -2,7 +2,6 @@
 
 namespace App\Tools;
 
-use App\Tools\PhpParser;
 use App\Tools\PhpParser\Visitors\AddImportVisitor;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -49,12 +48,6 @@ class File extends ConsoleCommand
         return $this->globEach($path, fn ($file) => Storage::delete($file));
     }
 
-    /**
-     * Copy a stub file into the target codebase.
-     *
-     * @param  string  $stub  The relative source path (underneath the `stubs` directory)
-     * @param  string  $destination  The relative destination path (underneath the target codebase base_path)
-     */
     public function stub(string $stub, string $destination): static
     {
         $stubPath = base_path("stubs/{$stub}");

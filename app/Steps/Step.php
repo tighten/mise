@@ -5,8 +5,8 @@ namespace App\Steps;
 use App\Tools\Artisan;
 use App\Tools\Composer;
 use App\Tools\ConsoleCommand;
-use App\Tools\File;
 use App\Tools\CsFixer;
+use App\Tools\File;
 use App\Tools\Git;
 use App\Tools\Npm;
 
