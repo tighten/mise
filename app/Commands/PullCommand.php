@@ -2,16 +2,19 @@
 
 namespace App\Commands;
 
+use App\Services\LocalRecipesService;
 use App\Services\MiseService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Storage;
 use LaravelZero\Framework\Commands\Command;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
-use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\multisearch;
 use function Laravel\Prompts\note;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\table;
 
 class PullCommand extends Command
 {
@@ -30,26 +33,41 @@ class PullCommand extends Command
 
         $remoteRecipes = $this->selectRemoteRecipes();
 
-        foreach ($remoteRecipes as $recipe) {
+        $recipeDiff = $this->diffRecipes($remoteRecipes);
+
+        $recipesToInstall = $this->handleConflicts($recipeDiff);
+
+        if (empty($recipesToInstall)) {
+            info('No recipes to install.');
+
+            return;
+        }
+
+        // Install recipes
+        foreach ($recipesToInstall as $recipe) {
             $this->install($recipe);
         }
 
         if (confirm('Do you want to run the recipe now?')) {
             $this->call('apply', [
-                'recipe' => $remoteRecipes,
+                'recipe' => $recipesToInstall,
                 '--no-process' => $this->option('no-process'),
             ]);
         }
     }
 
-    protected function selectRemoteRecipes(): array
+    private function selectRemoteRecipes(): array
     {
         $selectedRemoteRecipes = $this->argument('recipe');
 
         if (empty($selectedRemoteRecipes)) {
-            return multiselect(
-                label: 'Which recipe(s) should I pull?',
-                options: app(MiseService::class)->allForSelect(),
+            $options = app(MiseService::class)->allForSelect();
+
+            return multisearch(
+                'Which recipe(s) should I pull?',
+                fn (string $value) => strlen($value) > 0
+                    ? $options->filter(fn ($option) => str_contains($option, $value))->all()
+                    : $options->all(),
             );
         }
 
@@ -63,16 +81,89 @@ class PullCommand extends Command
         )->toArray();
     }
 
+    private function diffRecipes(array $recipeKeys): Collection
+    {
+        $miseService = app(MiseService::class)->all();
+
+        return collect($recipeKeys)->map(function ($key) use ($miseService) {
+            $remoteRecipe = $miseService->first(fn ($recipe) => $recipe['key'] === $key);
+
+            $status = 'new';
+
+            if (app(LocalRecipesService::class)->exists($key)) {
+                $localRecipe = app(LocalRecipesService::class)->findByKey($key);
+
+                $status = $localRecipe['integrity'] === $remoteRecipe['integrity'] ? 'unchanged' : 'updated';
+            }
+
+            return [
+                'key' => $key,
+                'status' => $status,
+            ];
+        });
+    }
+
+    private function handleConflicts(Collection $recipeAnalysis): array
+    {
+        $this->showConflictSummary($recipeAnalysis);
+
+        $existingRecipes = $recipeAnalysis->whereIn('status', ['unchanged', 'updated']);
+
+        if ($existingRecipes->isEmpty()) {
+            return $recipeAnalysis->pluck('key')->toArray();
+        }
+
+        return $this->resolveConflictsInteractively($recipeAnalysis);
+    }
+
+    private function showConflictSummary(Collection $recipeAnalysis): void
+    {
+        if ($recipeAnalysis->isEmpty()) {
+            return;
+        }
+
+        info('Checking for conflicts...');
+
+        $tableData = $recipeAnalysis->map(function ($recipe) {
+            $actionText = match ($recipe['status']) {
+                'new' => 'Will install',
+                'unchanged' => 'No changes',
+                'updated' => 'Updated available',
+            };
+
+            return [
+                $recipe['key'],
+                ucfirst($recipe['status']),
+                $actionText,
+            ];
+        })->toArray();
+
+        table(['Recipe', 'Status', 'Action'], $tableData);
+    }
+
+    private function resolveConflictsInteractively(Collection $recipeAnalysis): array
+    {
+        $choice = select(
+            label: 'How should I handle existing recipes?',
+            options: [
+                'skip-unchanged' => 'Skip unchanged recipes (recommended)',
+                'overwrite-all' => 'Overwrite all existing recipes',
+            ],
+            default: 'skip-unchanged'
+        );
+
+        return match ($choice) {
+            'skip-unchanged' => $recipeAnalysis->whereIn('status', ['new', 'updated'])->pluck('key')->toArray(),
+            'overwrite-all' => $recipeAnalysis->pluck('key')->toArray(),
+        };
+    }
+
     private function install($key)
     {
         info('Installing recipe: ' . $key);
 
         $data = app(MiseService::class)->findByKey($key);
 
-        Storage::drive('local-recipes')->put($data['class'] . '.php', $data['file']);
-
-        collect($data['steps'])->each(function ($step) {
-            Storage::drive('local-recipes')->put($step['class'] . '.php', $step['file']);
-        });
+        app(LocalRecipesService::class)->install($data->get('download_url'));
     }
 }
