@@ -43,7 +43,6 @@ class PullCommand extends Command
             return;
         }
 
-        // Install recipes
         foreach ($recipesToInstall as $recipe) {
             $this->install($recipe);
         }
@@ -71,7 +70,7 @@ class PullCommand extends Command
             );
         }
 
-        if (count($missingRecipes = array_diff($selectedRemoteRecipes, app(MiseService::class)->keys())) > 0) {
+        if (count($missingRecipes = array_diff($selectedRemoteRecipes, app(MiseService::class)->keys()->toArray())) > 0) {
             error('The following keys were not found and will be skipped');
             note(collect($missingRecipes)->map(fn ($key) => "  {$key}")->implode("\n"));
         }
@@ -93,7 +92,9 @@ class PullCommand extends Command
             if (app(LocalRecipesService::class)->exists($key)) {
                 $localRecipe = app(LocalRecipesService::class)->findByKey($key);
 
-                $status = $localRecipe['integrity'] === $remoteRecipe['integrity'] ? 'unchanged' : 'updated';
+                $status = $localRecipe['integrity'] === $remoteRecipe['integrity'] && $localRecipe['version'] === $remoteRecipe['version']
+                    ? 'unchanged'
+                    : 'updated';
             }
 
             return [
@@ -164,6 +165,13 @@ class PullCommand extends Command
 
         $data = app(MiseService::class)->findByKey($key);
 
-        app(LocalRecipesService::class)->install($data->get('download_url'));
+        app(LocalRecipesService::class)->install([
+            'key' => $key,
+            'name' => $data->get('name'),
+            'namespace' => $data->get('namespace'),
+            'version' => $data->get('version'),
+            'url' => $data->get('download_url'),
+            'integrity' => $data->get('integrity'),
+        ]);
     }
 }
