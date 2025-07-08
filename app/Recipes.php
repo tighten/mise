@@ -5,12 +5,15 @@ namespace App;
 use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Recipes
 {
     public function all(): Collection
     {
-        $customRecipesDir = $_SERVER['HOME'] . '/.mise/Recipes';
+        $customRecipesDir = Storage::disk('local-recipes')->path('');
 
         if (is_dir($customRecipesDir)) {
             $this->loadFilesInPath($customRecipesDir);
@@ -48,7 +51,9 @@ class Recipes
     protected function allInPath(string $path): Collection
     {
         return collect(File::allFiles($path))
-            ->map(fn ($file) => 'App\\Recipes\\' . str_replace('/', '\\',
+            ->map(fn ($file) => 'App\\Recipes\\' . str_replace(
+                '/',
+                '\\',
                 trim(str_replace([$path, '.php'], '', $file->getPathname()), '/')
             ))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))
@@ -57,8 +62,14 @@ class Recipes
 
     protected function loadFilesInPath(string $path): void
     {
-        foreach (glob($path . '/*.php') as $file) {
-            require_once $file;
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getExtension() === 'php') {
+                require_once $file->getPathname();
+            }
         }
     }
 }
