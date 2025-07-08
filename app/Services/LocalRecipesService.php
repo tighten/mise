@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
-/**
- * {
- *   recipes: { key: string, "name": "name", version: string, integrity: string, source: { url: string }  }[]
- * }
- */
 class LocalRecipesService
 {
     const Lock = 'mise-lock.json';
@@ -27,28 +22,7 @@ class LocalRecipesService
             throw new Exception('Integrity verification failed. Downloaded file integrity check failed.');
         }
 
-        $tempZipName = 'temp_recipe_' . time() . '_' . random_int(1000, 9999) . '.zip';
-        $tempDisk = Storage::disk('local');
-        $tempDisk->put($tempZipName, $zipContent);
-        $tempZipPath = $tempDisk->path($tempZipName);
-
-        $zip = new ZipArchive;
-        if ($zip->open($tempZipPath) !== true) {
-            $tempDisk->delete($tempZipName);
-            throw new Exception('Failed to open zip file.');
-        }
-
-        $disk = Storage::disk(self::Disk);
-        $extractPath = $disk->path($package['namespace']);
-
-        if (! $zip->extractTo($extractPath)) {
-            $zip->close();
-            $tempDisk->delete($tempZipName);
-            throw new Exception('Failed to extract zip file.');
-        }
-
-        $zip->close();
-        $tempDisk->delete($tempZipName);
+        $this->extractRecipe($zipContent, $package['namespace']);
 
         $this->updateLock($package['key'], [
             'name' => $package['name'],
@@ -102,5 +76,31 @@ class LocalRecipesService
         }
 
         Storage::disk(self::Disk)->put(self::Lock, json_encode($lockData, JSON_PRETTY_PRINT));
+    }
+
+    private function extractRecipe($content, $namespace): void
+    {
+        $tempZipName = 'temp_recipe_' . uniqid() . '.zip';
+        $tempDisk = Storage::disk('local');
+        $tempDisk->put($tempZipName, $content);
+        $tempZipPath = $tempDisk->path($tempZipName);
+
+        $zip = new ZipArchive;
+        if ($zip->open($tempZipPath) !== true) {
+            $tempDisk->delete($tempZipName);
+            throw new Exception('Failed to open zip file.');
+        }
+
+        $disk = Storage::disk(self::Disk);
+        $extractPath = $disk->path($namespace);
+
+        if (! $zip->extractTo($extractPath)) {
+            $zip->close();
+            $tempDisk->delete($tempZipName);
+            throw new Exception('Failed to extract zip file.');
+        }
+
+        $zip->close();
+        $tempDisk->delete($tempZipName);
     }
 }
