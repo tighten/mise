@@ -47,7 +47,7 @@ class PullCommand extends Command
             $this->install($recipe);
         }
 
-        if (confirm('Do you want to run the recipe now?')) {
+        if (confirm(sprintf('Should I apply %s?', implode(', ', $recipesToInstall)))) {
             $this->call('apply', [
                 'recipe' => $recipesToInstall,
                 '--no-process' => $this->option('no-process'),
