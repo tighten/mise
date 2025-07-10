@@ -2,9 +2,9 @@
 
 namespace Tests\Fixtures\CsFixer\PHP;
 
-use Tests\TestCase;
-use App\Tools\CsFixer;
 use Illuminate\Support\Facades\File;
+use Tests\TestCase;
+use Tighten\Mise\Tools\CsFixer;
 
 class MultipleIssues {
     public $array = array(1, 2, 3);

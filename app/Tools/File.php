@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tools;
+namespace Tighten\Mise\Tools;
 
-use App\Tools\PhpParser\Visitors\AddImportVisitor;
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use Tighten\Mise\Tools\PhpParser\Visitors\AddImportVisitor;
 
 class File extends ConsoleCommand
 {

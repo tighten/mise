@@ -1,8 +1,8 @@
 <?php
 
-use App\Tools\Composer;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
+use Tighten\Mise\Tools\Composer;
 
 beforeEach(function () {
     Storage::fake();

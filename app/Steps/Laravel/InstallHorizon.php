@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Steps\Laravel;
+namespace Tighten\Mise\Steps\Laravel;
 
-use App\Steps\Step;
+use Tighten\Mise\Steps\Step;
 
 class InstallHorizon extends Step
 {

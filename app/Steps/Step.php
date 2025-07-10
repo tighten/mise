@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Steps;
+namespace Tighten\Mise\Steps;
 
-use App\Tools\Artisan;
-use App\Tools\Composer;
-use App\Tools\ConsoleCommand;
-use App\Tools\CsFixer;
-use App\Tools\File;
-use App\Tools\Git;
-use App\Tools\Npm;
+use Tighten\Mise\Tools\Artisan;
+use Tighten\Mise\Tools\Composer;
+use Tighten\Mise\Tools\ConsoleCommand;
+use Tighten\Mise\Tools\CsFixer;
+use Tighten\Mise\Tools\File;
+use Tighten\Mise\Tools\Git;
+use Tighten\Mise\Tools\Npm;
 
 use function Laravel\Prompts\warning;
 

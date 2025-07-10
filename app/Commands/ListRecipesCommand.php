@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Tighten\Mise\Commands;
 
-use App\Recipes;
 use LaravelZero\Framework\Commands\Command;
+use Tighten\Mise\Recipes;
 
 class ListRecipesCommand extends Command
 {

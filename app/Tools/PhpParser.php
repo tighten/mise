@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace Tighten\Mise\Tools;
 
 use Exception;
 use Illuminate\Support\Facades\Cache;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Recipes;
+namespace Tighten\Mise\Recipes;
 
-use App\Recipes;
-use App\Steps\Step;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Tighten\Mise\Recipes;
+use Tighten\Mise\Steps\Step;
 
 use function Laravel\Prompts\warning;
 
@@ -51,7 +51,7 @@ abstract class Recipe
             return $stepName;
         }
 
-        $derivedClass = sprintf('App\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::Pascal($part))->toArray()));
+        $derivedClass = sprintf('Tighten\\Mise\\Steps\\%s', implode('\\', collect(explode('/', $stepName))->map(fn (string $part) => Str::Pascal($part))->toArray()));
         if (class_exists($derivedClass)) {
             return $derivedClass;
         }

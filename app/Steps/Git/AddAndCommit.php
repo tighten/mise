@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Steps\Git;
+namespace Tighten\Mise\Steps\Git;
 
-use App\Steps\Step;
+use Tighten\Mise\Steps\Step;
 
 class AddAndCommit extends Step
 {

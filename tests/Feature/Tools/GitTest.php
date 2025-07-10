@@ -1,8 +1,8 @@
 <?php
 
-use App\Tools\Git;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
+use Tighten\Mise\Tools\Git;
 
 test('git->add("path/to/my-file")', function () {
     Process::fake();

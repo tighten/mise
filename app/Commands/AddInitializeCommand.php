@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Commands;
+namespace Tighten\Mise\Commands;
 
-use App\Tools\File;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
+use Tighten\Mise\Tools\File;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;

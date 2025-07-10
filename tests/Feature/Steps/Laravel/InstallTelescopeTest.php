@@ -2,10 +2,10 @@
 
 namespace Tests\Steps\Laravel;
 
-use App\Steps\Laravel\InstallTelescope;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Key;
 use Laravel\Prompts\Prompt;
+use Tighten\Mise\Steps\Laravel\InstallTelescope;
 
 beforeEach(function () {
     Storage::fake();

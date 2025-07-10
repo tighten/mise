@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Recipes\Breeze;
+namespace Tighten\Mise\Recipes\Breeze;
 
-use App\Recipes\Recipe;
-use App\Steps\Database\Migrate;
-use App\Steps\Files\CreateFile;
-use App\Steps\Files\DeleteFiles;
-use App\Steps\Files\PublishStubs;
-use App\Steps\Git\AddAndCommit;
-use App\Steps\Laravel\InstallSanctum;
-use App\Steps\Step;
+use Tighten\Mise\Recipes\Recipe;
+use Tighten\Mise\Steps\Database\Migrate;
+use Tighten\Mise\Steps\Files\CreateFile;
+use Tighten\Mise\Steps\Files\DeleteFiles;
+use Tighten\Mise\Steps\Files\PublishStubs;
+use Tighten\Mise\Steps\Git\AddAndCommit;
+use Tighten\Mise\Steps\Laravel\InstallSanctum;
+use Tighten\Mise\Steps\Step;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;

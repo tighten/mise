@@ -2,8 +2,8 @@
 
 namespace Tests\Steps\Laravel;
 
-use App\Steps\Duster\Install;
 use Laravel\Prompts\Prompt;
+use Tighten\Mise\Steps\Duster\Install;
 
 it('Installs Tighten Duster', function () {
     Prompt::fake();

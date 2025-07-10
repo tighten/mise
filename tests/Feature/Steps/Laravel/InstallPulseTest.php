@@ -2,8 +2,8 @@
 
 namespace Tests\Steps\Laravel;
 
-use App\Steps\Laravel\InstallPulse;
 use Laravel\Prompts\Prompt;
+use Tighten\Mise\Steps\Laravel\InstallPulse;
 
 it('Installs Laravel Pulse', function () {
     Prompt::fake();

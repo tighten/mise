@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Recipes;
+namespace Tighten\Mise\Recipes;
 
-use App\Steps\Laravel\InstallHorizon;
-use App\Steps\Laravel\InstallPulse;
-use App\Steps\Laravel\InstallTelescope;
+use Tighten\Mise\Steps\Laravel\InstallHorizon;
+use Tighten\Mise\Steps\Laravel\InstallPulse;
+use Tighten\Mise\Steps\Laravel\InstallTelescope;
 
 class LaravelLocalDeveloperTooling extends Recipe
 {

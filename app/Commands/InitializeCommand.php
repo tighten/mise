@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Commands;
+namespace Tighten\Mise\Commands;
 
-use App\Tools\Composer;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Concerns\Colors;
 use LaravelZero\Framework\Commands\Command;
+use Tighten\Mise\Tools\Composer;
 
 use function Laravel\Prompts\note;
 use function Termwind\terminal;

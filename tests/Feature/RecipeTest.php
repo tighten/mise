@@ -1,9 +1,9 @@
 <?php
 
-use App\Steps\Laravel\InstallHorizon;
 use Illuminate\Support\Facades\Process;
 use Laravel\Prompts\Prompt;
 use Tests\Fixtures\TestRecipe;
+use Tighten\Mise\Steps\Laravel\InstallHorizon;
 
 it('resolves step classes', function () {
     $testRecipe = new TestRecipe;

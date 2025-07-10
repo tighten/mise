@@ -1,7 +1,7 @@
 <?php
 
-use App\Tools\Artisan;
 use Illuminate\Support\Facades\Process;
+use Tighten\Mise\Tools\Artisan;
 
 test('artisan->vendorPublish(...)', function () {
     Process::fake();

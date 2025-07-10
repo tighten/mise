@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Tools\Npm;
 use Illuminate\Support\Facades\Process;
+use Tighten\Mise\Tools\Npm;
 
 beforeEach(function () {
     Process::fake();
