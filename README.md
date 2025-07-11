@@ -5,16 +5,13 @@
 > [!WARNING]  
 > This tool is in alpha.
 
-A CLI tool to automatically apply preset steps to new Laravel applications, using concepts like composable recipes built
-from individual steps.
+A CLI tool to automatically apply preset steps to new Laravel applications, using concepts like composable recipes built from individual steps.
 
 **Use cases:**
-
 - Individual dev runs pre-made Mise recipes to kick off their app development
 - Individual dev or agency creates a recipe they use for all their new apps, and applies with Mise
 - Starter kit creator distributes their kit as a Mise recipe
-- Starter kit creator automates the building of their new repo-based (`laravel new` style) starter kit using a Mise
-  recipe that runs and pushes afresh every time there's a new version of Laravel available
+- Starter kit creator automates the building of their new repo-based (`laravel new` style) starter kit using a Mise recipe that runs and pushes afresh every time there's a new version of Laravel available
 
 ## Usage
 
@@ -52,11 +49,9 @@ Recipes are a list of steps, along with optional conditional logic around which 
 
 ### How recipes are defined/loaded
 
-Recipes are defined in the Mise codebase for now. In the future, you'll be able to have your own local recipes, and also
-pull them from a Mise SaaS.
+Recipes are defined in the Mise codebase for now. In the future, you'll be able to have your own local recipes, and also pull them from a Mise SaaS.
 
-We're also considering allowing you to set a default recipe to run, so you can maybe run `mise default` on every new
-project.
+We're also considering allowing you to set a default recipe to run, so you can maybe run `mise default` on every new project.
 
 ### What a step looks like
 
@@ -150,5 +145,4 @@ class EchoDate extends Recipe
 
 - Valet
 - Lambo, especially this PR: https://github.com/tighten/lambo/pull/185
-- Josh Manders announced a tool [Skeletor](https://github.com/aniftyco/skeletor) while I was plotting this; his tool is
-  primarily hooking around `Composer` so I'll consider it a cousin :)
+- Josh Manders announced a tool [Skeletor](https://github.com/aniftyco/skeletor) while I was plotting this; his tool is primarily hooking around `Composer` so I'll consider it a cousin :)
