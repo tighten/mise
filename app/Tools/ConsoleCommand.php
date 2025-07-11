@@ -2,13 +2,16 @@
 
 namespace Tighten\Mise\Tools;
 
+use Illuminate\Contracts\Process\ProcessResult;
 use Illuminate\Support\Facades\Process;
 
 class ConsoleCommand
 {
+    private ProcessResult $result;
+
     public function exec(string $command): static
     {
-        Process::run($command);
+        $this->result = Process::run($command)->throw();
 
         return $this;
     }
@@ -18,5 +21,10 @@ class ConsoleCommand
         $this->exec("vendor/bin/{$command}");
 
         return $this;
+    }
+
+    public function result(): ProcessResult
+    {
+        return $this->result;
     }
 }
