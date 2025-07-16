@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Commands;
+namespace Tighten\Mise\Commands;
 
-use App\Recipes;
-use App\Recipes\Recipe;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
+use Tighten\Mise\Recipes;
+use Tighten\Mise\Recipes\Recipe;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;

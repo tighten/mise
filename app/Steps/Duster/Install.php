@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Steps\Duster;
+namespace Tighten\Mise\Steps\Duster;
 
-use App\Steps\Step;
+use Tighten\Mise\Steps\Step;
 
 class Install extends Step
 {

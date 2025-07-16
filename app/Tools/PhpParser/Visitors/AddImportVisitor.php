@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Tools\PhpParser\Visitors;
+namespace Tighten\Mise\Tools\PhpParser\Visitors;
 
-use App\Tools\PhpParser;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use PhpParser\Node;
@@ -11,6 +10,7 @@ use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\UseItem;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
+use Tighten\Mise\Tools\PhpParser;
 
 class AddImportVisitor extends NodeVisitorAbstract
 {

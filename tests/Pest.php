@@ -11,13 +11,13 @@
 |
 */
 
-use App\Tools\Artisan;
-use App\Tools\Composer;
-use App\Tools\ConsoleCommand;
-use App\Tools\File;
-use App\Tools\Git;
-use App\Tools\Npm;
 use Illuminate\Support\Facades\Process;
+use Tighten\Mise\Tools\Artisan;
+use Tighten\Mise\Tools\Composer;
+use Tighten\Mise\Tools\ConsoleCommand;
+use Tighten\Mise\Tools\File;
+use Tighten\Mise\Tools\Git;
+use Tighten\Mise\Tools\Npm;
 
 uses(Tests\TestCase::class)->beforeEach(function () {
     Process::preventStrayProcesses();
@@ -66,70 +66,70 @@ expect()->extend('stepProcessRan', function (string $step, array $commands) {
 pest()->presets()->custom('zero', function (array $userNamespaces) {
     return [
         expect($userNamespaces)->toBeArray(),
-        expect('App\Traits')->toBeTraits(),
+        expect('Tighten\Mise\Traits')->toBeTraits(),
 
-        expect('App\Concerns')
+        expect('Tighten\Mise\Concerns')
             ->toBeTraits(),
 
-        expect('App\Features')
+        expect('Tighten\Mise\Features')
             ->toBeClasses()
-            ->ignoring('App\Features\Concerns'),
+            ->ignoring('Tighten\Mise\Features\Concerns'),
 
-        expect('App\Features')
+        expect('Tighten\Mise\Features')
             ->toHaveMethod('resolve'),
 
-        expect('App\Exceptions')
+        expect('Tighten\Mise\Exceptions')
             ->classes()
             ->toImplement('Throwable')
-            ->ignoring('App\Exceptions\Handler'),
+            ->ignoring('Tighten\Mise\Exceptions\Handler'),
 
-        expect('App')
+        expect('Tighten\Mise')
             ->classes()
             ->not->toImplement(Throwable::class)
-            ->ignoring('App\Exceptions')
-            ->ignoring('App\Tools\PhpParser\Exceptions'),
+            ->ignoring('Tighten\Mise\Exceptions')
+            ->ignoring('Tighten\Mise\Tools\PhpParser\Exceptions'),
 
-        expect('App\Commands')
+        expect('Tighten\Mise\Commands')
             ->classes()
             ->toHaveSuffix('Command'),
 
-        expect(['App\Commands', 'App\DevelopmentCommands'])
+        expect(['Tighten\Mise\Commands', 'Tighten\Mise\DevelopmentCommands'])
             ->classes()
             ->toExtend(\LaravelZero\Framework\Commands\Command::class),
 
-        expect(['App\Commands', 'App\DevelopmentCommands'])
+        expect(['Tighten\Mise\Commands', 'Tighten\Mise\DevelopmentCommands'])
             ->classes()
             ->toHaveMethod('handle'),
 
-        expect('App')
+        expect('Tighten\Mise')
             ->classes()
             ->not->toExtend('Illuminate\Console\Command')
-            ->ignoring(['App\Commands', 'App\DevelopmentCommands']),
+            ->ignoring(['Tighten\Mise\Commands', 'Tighten\Mise\DevelopmentCommands']),
 
-        expect('App\Listeners')
+        expect('Tighten\Mise\Listeners')
             ->toHaveMethod('handle'),
 
-        expect('App\Notifications')
+        expect('Tighten\Mise\Notifications')
             ->toExtend('Illuminate\Notifications\Notification'),
 
-        expect('App\Providers')
+        expect('Tighten\Mise\Providers')
             ->toHaveSuffix('ServiceProvider'),
 
-        expect('App\Providers')
+        expect('Tighten\Mise\Providers')
             ->toExtend('Illuminate\Support\ServiceProvider'),
 
-        expect('App\Providers')
+        expect('Tighten\Mise\Providers')
             ->not->toBeUsed(),
 
-        expect('App')
+        expect('Tighten\Mise')
             ->classes()
             ->not->toExtend('Illuminate\Support\ServiceProvider')
-            ->ignoring('App\Providers'),
+            ->ignoring('Tighten\Mise\Providers'),
 
-        expect('App')
+        expect('Tighten\Mise')
             ->classes()
             ->not->toHaveSuffix('ServiceProvider')
-            ->ignoring('App\Providers'),
+            ->ignoring('Tighten\Mise\Providers'),
 
         expect([
             'dd',

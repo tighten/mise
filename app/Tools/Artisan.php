@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace Tighten\Mise\Tools;
 
 class Artisan extends ConsoleCommand
 {

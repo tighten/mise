@@ -1,9 +1,9 @@
 <?php
 
-use App\Recipes;
-use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
+use Tighten\Mise\Recipes;
+use Tighten\Mise\Recipes\Recipe;
 
 it('returns all recipes as collection of Recipe instances', function () {
     $recipes = (new Recipes)->all();

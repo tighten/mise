@@ -2,7 +2,7 @@
 
 namespace Tests\Fixtures;
 
-use App\Recipes\Recipe;
+use Tighten\Mise\Recipes\Recipe;
 
 class TestRecipe extends Recipe
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Steps\Files;
+namespace Tighten\Mise\Steps\Files;
 
-use App\Steps\Step;
+use Tighten\Mise\Steps\Step;
 
 class DeleteFiles extends Step
 {

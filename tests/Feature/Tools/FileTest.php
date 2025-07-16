@@ -1,7 +1,7 @@
 <?php
 
-use App\Tools\File;
 use Illuminate\Support\Facades\Storage;
+use Tighten\Mise\Tools\File;
 
 beforeEach(function () {
     Storage::fake();

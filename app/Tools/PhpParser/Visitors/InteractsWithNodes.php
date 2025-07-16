@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools\PhpParser\Visitors;
+namespace Tighten\Mise\Tools\PhpParser\Visitors;
 
 use PhpParser\Node;
 

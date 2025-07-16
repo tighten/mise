@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DevelopmentCommands;
+namespace Tighten\Mise\DevelopmentCommands;
 
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;

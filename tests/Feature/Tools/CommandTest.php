@@ -1,7 +1,7 @@
 <?php
 
-use App\Tools\ConsoleCommand;
 use Illuminate\Support\Facades\Process;
+use Tighten\Mise\Tools\ConsoleCommand;
 
 test('console->exec(...)', function () {
     Process::fake();

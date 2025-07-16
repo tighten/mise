@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Recipes;
+namespace Tighten\Mise\Recipes;
 
 use function Laravel\Prompts\confirm;
 

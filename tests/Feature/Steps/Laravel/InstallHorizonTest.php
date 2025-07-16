@@ -2,7 +2,7 @@
 
 namespace Tests\Steps\Laravel;
 
-use App\Steps\Laravel\InstallHorizon;
+use Tighten\Mise\Steps\Laravel\InstallHorizon;
 
 it('Installs Laravel Horizon', function () {
     expect()->stepProcessRan(InstallHorizon::class, [

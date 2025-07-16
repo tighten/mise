@@ -110,7 +110,7 @@ class Tighten extends Recipe
 
 If you'd like to build your own recipe, you can!
 
-Build a class that extends `App/Recipe` and place it in `~/.mise/Recipes`. It'll just show up!
+Build a class that extends `Tighten\Mise\Recipe` and place it in `~/.mise/Recipes`. It'll just show up!
 
 Here's an example:
 
@@ -118,7 +118,7 @@ Here's an example:
 // ~/.mise/Recipes/EchoDate.php
 <?php
 
-namespace App\Recipes;
+namespace Tighten\Mise\Recipes;
 
 class EchoDate extends Recipe
 {

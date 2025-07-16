@@ -2,9 +2,9 @@
 
 namespace Tests\Tools;
 
-use App\Tools\CsFixer;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Tighten\Mise\Tools\CsFixer;
 
 beforeEach(function () {
     Storage::fake();

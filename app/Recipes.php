@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Tighten\Mise;
 
-use App\Recipes\Recipe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Tighten\Mise\Recipes\Recipe;
 
 class Recipes
 {
@@ -48,7 +48,7 @@ class Recipes
     protected function allInPath(string $path): Collection
     {
         return collect(File::allFiles($path))
-            ->map(fn ($file) => 'App\\Recipes\\' . str_replace('/', '\\',
+            ->map(fn ($file) => 'Tighten\\Mise\\Recipes\\' . str_replace('/', '\\',
                 trim(str_replace([$path, '.php'], '', $file->getPathname()), '/')
             ))
             ->filter(fn ($class) => class_exists($class) && is_subclass_of($class, Recipe::class))

@@ -2,7 +2,7 @@
 
 namespace Tests\Fixtures;
 
-use App\Steps\Step;
+use Tighten\Mise\Steps\Step;
 
 class TestStep extends Step
 {

@@ -1,20 +1,20 @@
 <?php
 
-use App\Recipes\Recipe;
-use App\Steps\Step;
+use Tighten\Mise\Recipes\Recipe;
+use Tighten\Mise\Steps\Step;
 
 arch('Recipes')
-    ->expect('App\Recipes')
+    ->expect('Tighten\Mise\Recipes')
     ->classes()
     ->toExtend(Recipe::class)
-    ->and('App')
+    ->and('Tighten\Mise')
     ->classes()
-    ->not->toExtend(Recipe::class)->ignoring(['App\Recipes']);
+    ->not->toExtend(Recipe::class)->ignoring(['Tighten\Mise\Recipes']);
 
 arch('Steps')
-    ->expect('App\Steps')
+    ->expect('Tighten\Mise\Steps')
     ->classes()
     ->toExtend(Step::class)
-    ->and('App')
+    ->and('Tighten\Mise')
     ->classes()
-    ->not->toExtend(Step::class)->ignoring(['App\Steps']);
+    ->not->toExtend(Step::class)->ignoring(['Tighten\Mise\Steps']);
