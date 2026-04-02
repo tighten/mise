@@ -3,7 +3,7 @@
 # Mise ("meez")
 
 > [!WARNING]  
-> This tool is in alpha.
+> This tool is in now deprecated. See [Maestro](https://laravel.com/blog/meet-maestro-how-we-manage-21-laravel-starter-kit-variants-without-losing-our-minds) for a great replacement.
 
 A CLI tool to automatically apply preset steps to new Laravel applications, using concepts like composable recipes built from individual steps.
 
