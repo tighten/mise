@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\CloningVisitor;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
@@ -28,6 +29,7 @@ class PhpParser
 
     /**
      * Central entry point for editing PHP files with PHP Parser.
+     * Uses formatting-preserving pretty printing to maintain original code style.
      *
      * @param  array<NodeVisitorAbstract>  $edits
      *
@@ -37,10 +39,24 @@ class PhpParser
     {
         Cache::put(self::ACTIVE_FILENAME_KEY, $phpFilePath);
 
-        $this->traverser($edits)
-            ->traverse($ast = $this->toAst($phpFilePath));
+        $code = Storage::get($phpFilePath);
 
-        Storage::put($phpFilePath, $this->toPhpFile($ast));
+        // Parse the code and save the tokens for format preservation
+        $oldStmts = $this->parser->parse($code);
+        $oldTokens = $this->parser->getTokens();
+
+        // Clone the AST before making changes
+        $cloningTraverser = new NodeTraverser;
+        $cloningTraverser->addVisitor(new CloningVisitor);
+        $newStmts = $cloningTraverser->traverse($oldStmts);
+
+        // Apply the edits to the cloned AST
+        $this->traverser($edits)->traverse($newStmts);
+
+        // Use format-preserving pretty printing
+        $newCode = $this->phpFilePrinter->printFormatPreserving($newStmts, $oldStmts, $oldTokens);
+
+        Storage::put($phpFilePath, $newCode);
     }
 
     /**
