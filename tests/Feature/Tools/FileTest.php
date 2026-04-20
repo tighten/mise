@@ -218,7 +218,7 @@ test('file->addImport(...) with other imports', function () {
 
     (new File)->addImports($path, 'App\Models\User');
 
-    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact;\nuse App\Models\User;\n\nclass Test\n{\n    // Some code\n}");
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\Awesome;\n\nuse App\Models\Contact;\nuse App\Models\User;\n\nclass Test {\n    // Some code\n}");
 });
 
 test('file->addImport(...) skips duplicate imports', function () {
@@ -293,4 +293,95 @@ test('file->appendAfterLine(...) honors indentation', function () {
     (new File)->appendAfterLine($path, 'Line 2', 'Appended content');
 
     expect(Storage::get($path))->toBe("Line 1\n    Line 2\n    Appended content\n");
+});
+
+test('file->addTraits(...) adds trait to class with no traits', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, 'HasFactory');
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) adds trait to class with existing traits', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, 'Notifiable');
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) is idempotent - does not add duplicate traits', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, 'HasFactory');
+
+    expect(Storage::get($path))->toBe($initialContent);
+});
+
+test('file->addTraits(...) adds multiple traits at once', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, ['HasFactory', 'Notifiable', 'HasUuids']);
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable, HasUuids;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) adds multiple traits to class with existing traits', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, ['Notifiable', 'HasUuids']);
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable, HasUuids;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) only adds traits not already present when adding multiple', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, ['HasFactory', 'HasUuids', 'Notifiable', 'SoftDeletes']);
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use HasFactory, Notifiable, HasUuids, SoftDeletes;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) works with fully qualified trait names', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory');
+
+    expect(Storage::get($path))->toBe("<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    use Illuminate\\Database\\Eloquent\\Factories\\HasFactory;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}");
+});
+
+test('file->addTraits(...) throws exception when no class is found', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\n// Just some code without a class";
+    Storage::put($path, $initialContent);
+
+    expect(fn () => (new File)->addTraits($path, 'HasFactory'))
+        ->toThrow(Exception::class, "Class not found in {$path}");
+});
+
+test('file->addTraits(...) preserves PHPDoc comments on traits', function () {
+    $path = 'test.php';
+    $initialContent = "<?php\n\nnamespace App\\Models;\n\nclass User extends Model\n{\n    /** @use HasFactory<\\Database\\Factories\\UserFactory> */\n    use HasFactory;\n\n    public function getName()\n    {\n        return \$this->name;\n    }\n}";
+    Storage::put($path, $initialContent);
+
+    (new File)->addTraits($path, 'Notifiable');
+
+    $result = Storage::get($path);
+    expect($result)->toContain('/** @use HasFactory<\\Database\\Factories\\UserFactory> */')
+        ->toContain('use HasFactory, Notifiable;');
 });

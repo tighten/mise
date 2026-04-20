@@ -5,6 +5,7 @@ namespace Tighten\Mise\Tools;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Tighten\Mise\Tools\PhpParser\Visitors\AddImportVisitor;
+use Tighten\Mise\Tools\PhpParser\Visitors\AddTraitVisitor;
 
 class File extends ConsoleCommand
 {
@@ -187,6 +188,14 @@ class File extends ConsoleCommand
     {
         (new PhpParser)->edit($path, [new AddImportVisitor($classes)]);
         (new CsFixer)->fix($path, ['single_import_per_statement', 'ordered_imports', 'single_line_after_imports']);
+
+        return $this;
+    }
+
+    public function addTraits(string $path, string|array $traits): static
+    {
+        (new PhpParser)->edit($path, [new AddTraitVisitor($traits)]);
+        (new CsFixer)->fix($path, ['class_attributes_separation']);
 
         return $this;
     }
